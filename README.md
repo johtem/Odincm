@@ -1,2 +1,0 @@
-# OdinCM
-Odin Customer Module
