@@ -1,0 +1,60 @@
+﻿@page
+@model OdinCM.Pages.Customers.IndexModel
+
+@{
+    ViewData["Title"] = "Customers";
+}
+
+<h2>Customers</h2>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+
+<form>
+    <p>
+        Customer: <input type="text" name="SearchString" value="@ViewData["SearchString"]" />
+        <input type="submit" value="Filter" />
+    </p>
+</form>
+
+<table class="table table-sm table-hover">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Customer[0].CustomerName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Customer[0].CreatedAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Customer[0].UpdatedAt)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Customer)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CustomerName)
+                </td>
+                <td>
+                    <span data-value="@item.CreatedAt" class="timeStampValue"> @item.CreatedAt</span>
+
+                </td>
+                <td>
+                    <span data-value="@item.UpdatedAt" class="timeStampValue"> @item.UpdatedAt</span>
+                </td>
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@item.CustomerID">Edit</a> |
+                    <a asp-page="./Details" asp-route-id="@item.CustomerID">Details</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.CustomerID">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<!-- @TimeZoneInfo.Local.Id
+// Intl.DateTimeFormat().resolvedOptions().timeZone -->
