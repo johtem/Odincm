@@ -18,5 +18,8 @@ namespace OdinCM.Models
 
         public DbSet<OdinCM.Models.Customer> Customer { get; set; }
         public DbSet<Article> Articles { get; set; }
+
+
+        
     }
 }

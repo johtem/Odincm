@@ -35,12 +35,22 @@ namespace OdinCM.Pages.Articles
             {
                 return Page();
             }
+
+
+            // Checks if Topic is unique
+            if (_context.Articles.Any(a => a.Topic == Article.Topic))
+            {
+                // Needs to be Model.
+                ModelState.AddModelError($"{nameof(Article)}.{nameof(Article.Topic)}", $"The topic '{Article.Topic}' already exists. Please choose another name");
+                return Page();
+            }
+
             Article.Published = _clock.GetCurrentInstant();
 
             _context.Articles.Add(Article);
             await _context.SaveChangesAsync();
 
-            return RedirectToPage("./Index");
+            return Redirect($"/Article/{Article.Topic}");
         }
     }
 }
