@@ -42,6 +42,9 @@ namespace OdinCM.Pages.Articles
             if (id == null)
             {
                 return NotFound();
+            } else if (id == "HomePage")
+            {
+                return NotFound();
             }
 
             Article = await _context.Articles.FindAsync(id);
