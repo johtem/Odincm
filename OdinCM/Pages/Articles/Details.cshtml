@@ -1,4 +1,4 @@
-﻿@page
+﻿@page "{topicName?}"
 @model OdinCM.Pages.Articles.DetailsModel
 
 @{
@@ -6,10 +6,15 @@
 }
 
 <h2>@Model.Article.Topic</h2>
+<h6>Last Published: <span data-value="@Model.Article.Published" class="timeStampValueL"> @Model.Article.Published</span></h6>
 
 <markdown>@Model.Article.Content</markdown>
 
 <div>
-    <a asp-page="./Edit" asp-route-id="@Model.Article.Topic">Edit</a> |
-    <a asp-page="./Index">Back to List</a>
+    <a asp-page="./Edit" asp-route-id="@Model.Article.Topic">Edit</a>
+    @if (Model.Article.Topic != "HomePage")
+    {
+        <text> |</text> <a href="~/Articles">Back to Home</a>
+    }
+
 </div>

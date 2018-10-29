@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using NodaTime;
 using OdinCM.Models;
 
 namespace OdinCM.Pages.Articles
@@ -14,9 +15,12 @@ namespace OdinCM.Pages.Articles
     {
         private readonly OdinCM.Models.OdinCMContext _context;
 
-        public EditModel(OdinCM.Models.OdinCMContext context)
+        private readonly IClock _clock;
+
+        public EditModel(OdinCM.Models.OdinCMContext context, IClock clock)
         {
             _context = context;
+            _clock = clock;
         }
 
         [BindProperty]
@@ -45,6 +49,8 @@ namespace OdinCM.Pages.Articles
                 return Page();
             }
 
+            Article.Published = _clock.GetCurrentInstant();
+
             _context.Attach(Article).State = EntityState.Modified;
 
             try
@@ -63,7 +69,7 @@ namespace OdinCM.Pages.Articles
                 }
             }
 
-            return RedirectToPage("./Index");
+            return RedirectToPage("Details");
         }
 
         private bool ArticleExists(string id)

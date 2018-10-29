@@ -12,7 +12,6 @@ C:\Users\790021957\Documents\Visual Studio 2017\Projects\OdinCM\OdinCM\obj\Debug
 C:\Users\790021957\Documents\Visual Studio 2017\Projects\OdinCM\OdinCM\obj\Debug\netcoreapp2.1\Razor\Pages\Articles\Delete.g.cshtml.cs
 C:\Users\790021957\Documents\Visual Studio 2017\Projects\OdinCM\OdinCM\obj\Debug\netcoreapp2.1\Razor\Pages\Articles\Details.g.cshtml.cs
 C:\Users\790021957\Documents\Visual Studio 2017\Projects\OdinCM\OdinCM\obj\Debug\netcoreapp2.1\Razor\Pages\Articles\Edit.g.cshtml.cs
-C:\Users\790021957\Documents\Visual Studio 2017\Projects\OdinCM\OdinCM\obj\Debug\netcoreapp2.1\Razor\Pages\Articles\Index.g.cshtml.cs
 C:\Users\790021957\Documents\Visual Studio 2017\Projects\OdinCM\OdinCM\obj\Debug\netcoreapp2.1\Razor\Pages\Contact.g.cshtml.cs
 C:\Users\790021957\Documents\Visual Studio 2017\Projects\OdinCM\OdinCM\obj\Debug\netcoreapp2.1\Razor\Pages\Customers\Create.g.cshtml.cs
 C:\Users\790021957\Documents\Visual Studio 2017\Projects\OdinCM\OdinCM\obj\Debug\netcoreapp2.1\Razor\Pages\Customers\Delete.g.cshtml.cs
@@ -45,3 +44,4 @@ C:\Users\790021957\Documents\Visual Studio 2017\Projects\OdinCM\OdinCM\bin\Debug
 C:\Users\790021957\Documents\Visual Studio 2017\Projects\OdinCM\OdinCM\bin\Debug\netcoreapp2.1\OdinCM.Views.pdb
 C:\Users\790021957\Documents\Visual Studio 2017\Projects\OdinCM\OdinCM\obj\Debug\netcoreapp2.1\OdinCM.Views.pdb
 C:\Users\790021957\Documents\Visual Studio 2017\Projects\OdinCM\OdinCM\obj\Debug\netcoreapp2.1\OdinCM.csproj.CopyComplete
+C:\Users\790021957\Documents\Visual Studio 2017\Projects\OdinCM\OdinCM\obj\Debug\netcoreapp2.1\Razor\Pages\Articles\OldIndex.g.cshtml.cs

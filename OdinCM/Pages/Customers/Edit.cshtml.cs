@@ -49,6 +49,7 @@ namespace OdinCM.Pages.Customers
             }
 
             Customer.UpdatedAt = _clock.GetCurrentInstant();
+            Customer.CreatedAt = Customer.CreatedAt;
 
             _context.Attach(Customer).State = EntityState.Modified;
 

@@ -20,14 +20,12 @@ namespace OdinCM.Pages.Articles
 
         public Article Article { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(string id)
+        public async Task<IActionResult> OnGetAsync(string topicName)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            topicName = topicName ?? "HomePage";
 
-            Article = await _context.Articles.FirstOrDefaultAsync(m => m.Topic == id);
+
+            Article = await _context.Articles.FirstOrDefaultAsync(m => m.Topic == topicName);
 
             if (Article == null)
             {

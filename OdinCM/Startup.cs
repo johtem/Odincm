@@ -44,7 +44,7 @@ namespace OdinCM
             services.AddMvc()
                 .AddRazorPagesOptions(options =>
                 {
-                    options.Conventions.AddPageRoute("/customer/index", @"home");
+                    options.Conventions.AddPageRoute("/Articles/Details", "Articles/{topicName?}");
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
