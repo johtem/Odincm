@@ -22,7 +22,7 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background-color: #64379B; ">
-                <a class="navbar-brand" asp-page="/Index">Odin CM</a>
+        <a class="navbar-brand" asp-page="/Index">Odin CM</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -41,8 +41,15 @@
                 </li>
             </ul>
             <ul class="navbar-nav navbar-right">
-                <li class="nav-item">
-                    <a class="nav-link" href="/Articles">Suggestions</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownSuggestions" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Suggestions
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownSuggestions">
+                        <a class="dropdown-item" href="/Articles">Suggestions</a>
+                        <a class="dropdown-item" href="/Articles/All">All</a>
+                    </div>
+             
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/About">About</a>
