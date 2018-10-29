@@ -72,6 +72,10 @@ namespace OdinCM
             app.UseCookiePolicy();
 
             app.UseMvc();
+
+            var scope = app.ApplicationServices.CreateScope();
+            var context = scope.ServiceProvider.GetService<OdinCMContext>();
+            SeedData.Initialize(context);
         }
     }
 }

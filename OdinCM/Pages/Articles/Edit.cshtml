@@ -10,13 +10,13 @@
 <h4>Article</h4>
 <hr />
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-8">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Article.Topic" />
             <div class="form-group">
                 <label asp-for="Article.Topic" class="control-label"></label><br />
-                <span>@Model.Article.Topic</span> 
+                <span>@Model.Article.Topic</span>
                 <span asp-validation-for="Article.Topic" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -33,21 +33,13 @@
 </div>
 
 <div>
-    @if (Model.Article.Topic != "")
-    {
-        <a href="~/Articles">Back to Home</a>
-    }
-
+    <a href="~/Articles">Back to Home</a>
 </div>
 
 @section Scripts {
-    <script src="~/lib/simplemde/dist/simplemde.min.js"></script>
-    <script>
-      var simplemde = new SimpleMDE();
-    </script>
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @await Html.PartialAsync("_EditorScript")
 }
 
 @section Styles {
-    <link href="~/lib/simplemde/dist/simplemde.min.css" rel="stylesheet" />
+    @await Html.PartialAsync("_EditorStyle")
 }
