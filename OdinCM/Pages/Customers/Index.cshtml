@@ -18,23 +18,26 @@
     </p>
 </form>
 
+
+<pager total-pages="Model.TotalPages" current-page="Model.PageNumber" page="index"></pager>
+
 <table class="table table-sm table-hover">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Customer[0].CustomerName)
+                @Html.DisplayNameFor(model => model.Customers[0].CustomerName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Customer[0].CreatedAt)
+                @Html.DisplayNameFor(model => model.Customers[0].CreatedAt)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Customer[0].UpdatedAt)
+                @Html.DisplayNameFor(model => model.Customers[0].UpdatedAt)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Customer)
+        @foreach (var item in Model.Customers)
         {
             <tr>
                 <td>
