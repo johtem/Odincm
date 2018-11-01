@@ -7,18 +7,22 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using NodaTime;
 using OdinCM.Models;
+using OdinCM.Helpers;
+using Microsoft.Extensions.Logging;
 
 namespace OdinCM.Pages.Articles
 {
     public class CreateModel : PageModel
     {
-        private readonly OdinCM.Models.OdinCMContext _context;
+        private readonly OdinCMContext _context;
         private readonly IClock _clock;
+        private readonly ILogger _loggerFactory;
 
-        public CreateModel(OdinCM.Models.OdinCMContext context, IClock clock)
+        public CreateModel(OdinCM.Models.OdinCMContext context, IClock clock, ILoggerFactory loggerFactory)
         {
             _context = context;
             _clock = clock;
+            _loggerFactory = loggerFactory.CreateLogger("CreatePage");
         }
 
         public IActionResult OnGet()
@@ -31,26 +35,34 @@ namespace OdinCM.Pages.Articles
 
         public async Task<IActionResult> OnPostAsync()
         {
+
+            var slug = UrlHelpers.URLFriendly(Article.Topic.ToLower());
+            Article.Slug = slug;
+
             if (!ModelState.IsValid)
             {
                 return Page();
             }
 
+               
 
-            // Checks if Topic is unique
-            if (_context.Articles.Any(a => a.Topic == Article.Topic))
+            _loggerFactory.LogInformation($"Creating page with slug: {slug}");
+            var isAvailable = !_context.Articles.Any(x => x.Slug == slug);
+
+            if (isAvailable == false)
             {
-                // Needs to be Model.
-                ModelState.AddModelError($"{nameof(Article)}.{nameof(Article.Topic)}", $"The topic '{Article.Topic}' already exists. Please choose another name");
+                ModelState.AddModelError("Article.Topic", "This Title already exists.");
                 return Page();
             }
 
             Article.Published = _clock.GetCurrentInstant();
+            
 
             _context.Articles.Add(Article);
             await _context.SaveChangesAsync();
 
-            return Redirect($"/Article/{Article.Topic}");
+            return Redirect($"/Articles/{Article.Slug}");
         }
+
     }
 }

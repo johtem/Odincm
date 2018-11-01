@@ -1,4 +1,4 @@
-﻿@page "{topicName?}"
+﻿@page "./Articles/{Slug?}"
 @model OdinCM.Pages.Articles.DetailsModel
 
 @{
@@ -11,7 +11,7 @@
 <markdown>@Model.Article.Content</markdown>
 
 <div>
-    <a asp-page="./Edit" asp-route-id="@Model.Article.Topic">Edit</a>
+    <a asp-page="./Edit" asp-route-id="@Model.Article.Id">Edit</a>
     @if (Model.Article.Topic != "HomePage")
     {
         <text> |</text> <a href="~/Articles">Back to Home</a>

@@ -21,14 +21,14 @@ namespace OdinCM.Pages.Articles
         [BindProperty]
         public Article Article { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(string id)
+        public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            Article = await _context.Articles.FirstOrDefaultAsync(m => m.Topic == id);
+            Article = await _context.Articles.FirstOrDefaultAsync(m => m.Id == id);
 
             if (Article == null)
             {

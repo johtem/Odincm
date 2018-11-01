@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
+using OdinCM.Helpers;
 using OdinCM.Models;
 
 namespace OdinCM.Pages.Articles
@@ -26,14 +27,14 @@ namespace OdinCM.Pages.Articles
         [BindProperty]
         public Article Article { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(string id)
+        public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            Article = await _context.Articles.FirstOrDefaultAsync(m => m.Topic == id);
+            Article = await _context.Articles.SingleOrDefaultAsync(m => m.Id == id);
 
             if (Article == null)
             {
@@ -49,9 +50,22 @@ namespace OdinCM.Pages.Articles
                 return Page();
             }
 
-            Article.Published = _clock.GetCurrentInstant();
 
             _context.Attach(Article).State = EntityState.Modified;
+
+            //check if the slug already exists in the database.  
+            var slug = UrlHelpers.URLFriendly(Article.Topic.ToLower());
+            var isAvailable = !_context.Articles.Any(x => x.Slug == slug && x.Id != Article.Id);
+
+            if (isAvailable == false)
+            {
+                ModelState.AddModelError("Article.Topic", "This Title already exists.");
+                return Page();
+            }
+
+            Article.Published = _clock.GetCurrentInstant();
+            Article.Slug = slug;
+
 
             try
             {
@@ -59,7 +73,7 @@ namespace OdinCM.Pages.Articles
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ArticleExists(Article.Topic))
+                if (!ArticleExists(Article.Id))
                 {
                     return NotFound();
                 }
@@ -69,12 +83,12 @@ namespace OdinCM.Pages.Articles
                 }
             }
 
-            return RedirectToPage("Details");
+            return Redirect($"/Articles/{(Article.Slug == "home-page" ? "" : Article.Slug)}");
         }
 
-        private bool ArticleExists(string id)
+        private bool ArticleExists(int id)
         {
-            return _context.Articles.Any(e => e.Topic == id);
+            return _context.Articles.Any(e => e.Id == id);
         }
     }
 }

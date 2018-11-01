@@ -14,7 +14,11 @@ namespace OdinCM.Models
         {
         }
 
-        public DbSet<OdinCM.Models.Movie> Movie { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Article>()
+                .HasIndex(b => b.Slug).IsUnique();
+        }
 
         public DbSet<OdinCM.Models.Customer> Customer { get; set; }
         public DbSet<Article> Articles { get; set; }

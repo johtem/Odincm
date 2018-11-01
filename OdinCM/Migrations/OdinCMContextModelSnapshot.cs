@@ -2,7 +2,6 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OdinCM.Models;
 
@@ -15,13 +14,11 @@ namespace OdinCM.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024");
 
             modelBuilder.Entity("OdinCM.Models.Article", b =>
                 {
-                    b.Property<string>("Topic")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Content");
@@ -29,7 +26,16 @@ namespace OdinCM.Migrations
                     b.Property<DateTime>("PublishedDateTime")
                         .HasColumnName("Published");
 
-                    b.HasKey("Topic");
+                    b.Property<string>("Slug")
+                        .IsRequired();
+
+                    b.Property<string>("Topic")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Slug")
+                        .IsUnique();
 
                     b.ToTable("Articles");
                 });
@@ -37,8 +43,7 @@ namespace OdinCM.Migrations
             modelBuilder.Entity("OdinCM.Models.Customer", b =>
                 {
                     b.Property<int>("CustomerID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("CreatedAtDateTime")
                         .HasColumnName("CreatedAt");
@@ -53,34 +58,6 @@ namespace OdinCM.Migrations
                     b.HasKey("CustomerID");
 
                     b.ToTable("Customer");
-                });
-
-            modelBuilder.Entity("OdinCM.Models.Movie", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Genre")
-                        .IsRequired()
-                        .HasMaxLength(30);
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("Rating")
-                        .IsRequired()
-                        .HasMaxLength(5);
-
-                    b.Property<DateTime>("ReleaseDate");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(60);
-
-                    b.HasKey("ID");
-
-                    b.ToTable("Movie");
                 });
 #pragma warning restore 612, 618
         }

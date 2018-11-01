@@ -34,8 +34,13 @@ namespace OdinCM
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddDbContext<OdinCMContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("OdinCMContext")));
+            services.AddEntityFrameworkSqlite()
+                    .AddDbContext<OdinCMContext>(options =>
+                            options.UseSqlite("Data Source=./wiki.db")
+                    );
+
+            //services.AddDbContext<OdinCMContext>(options =>
+            //        options.UseSqlServer(Configuration.GetConnectionString("OdinCMContext")));
 
             // Add NodaTime clock for time-based testing. https://www.iana.org/time-zones
             services.AddSingleton<IClock>(SystemClock.Instance);
@@ -44,7 +49,8 @@ namespace OdinCM
             services.AddMvc()
                 .AddRazorPagesOptions(options =>
                 {
-                    options.Conventions.AddPageRoute("/Articles/Details", "Articles/{topicName?}");
+                    options.Conventions.AddPageRoute("/Articles/Details", "Articles/{Slug?}");
+                    // options.Conventions.AddPageRoute("/Articles/Details", "Articles/{topicName?}");
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 

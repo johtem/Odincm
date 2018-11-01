@@ -11,14 +11,17 @@ namespace OdinCM.Models
 {
     public class Article
     {
-        [Required, Key, MaxLength(100)]
+        [Key]
+        public int Id { get; set; }
+
+        [Required]
         public string Topic { get; set; }
+
+    
+        public string Slug { get; set; }
 
         [NotMapped]
         public Instant Published { get; set; }
-        
-        [DataType(DataType.MultilineText)]
-        public string Content { get; set; }
 
         // Buddy property (?)
         [Obsolete("This property only exists for EF-serialization purposes")]
@@ -30,5 +33,9 @@ namespace OdinCM.Models
             // TODO: Remove this ugly hack
             set => Published = DateTime.SpecifyKind(value, DateTimeKind.Utc).ToInstant();
         }
+
+        [DataType(DataType.MultilineText)]
+        public string Content { get; set; }
+
     }
 }

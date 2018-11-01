@@ -22,6 +22,7 @@ namespace OdinCM.Models
                 var homePageArticle = new Article
                 {
                     Topic = "HomePage",
+                    Slug = "home-page",
                     Content = "This is the default home page. Please change me!",
                     Published = SystemClock.Instance.GetCurrentInstant()
                 };

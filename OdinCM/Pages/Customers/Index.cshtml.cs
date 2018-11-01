@@ -31,22 +31,16 @@ namespace OdinCM.Pages.Customers
         {
             ViewData["SearchString"] = searchString;
 
-
-            // Customers = await _context.Customer
-            //    .AsNoTracking()
-            //    .OrderBy(a => a.CustomerName)
-            //    .Skip((PageNumber - 1) * _PageSize)
-            //    .Take(_PageSize)
-            //    .ToArrayAsync();
-           
-            TotalPages = (int)Math.Ceiling((await _context.Customer.CountAsync()) / (double)_PageSize);
-
             var customers = from m in _context.Customer
                          select m;
 
             if (!String.IsNullOrEmpty(searchString))
             {
                 customers = customers.Where(s => s.CustomerName.Contains(searchString));
+                TotalPages = (int)Math.Ceiling((await _context.Customer.Where(s => s.CustomerName.Contains(searchString)).CountAsync()) / (double)_PageSize);
+            } else
+            {
+                TotalPages = (int)Math.Ceiling((await _context.Customer.CountAsync()) / (double)_PageSize);
             }
 
             Customers = await customers.OrderBy(s => s.CustomerName)
