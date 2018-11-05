@@ -12,9 +12,10 @@ namespace OdinCM.Models
     public class Article
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [Required]
+        [Required, MaxLength(100)]
         public string Topic { get; set; }
 
     
@@ -36,6 +37,15 @@ namespace OdinCM.Models
 
         [DataType(DataType.MultilineText)]
         public string Content { get; set; }
+
+        public int ViewCount { get; set; } = 0;
+
+        public virtual ICollection<Comment> Comments { get; set; }
+
+        public Article()
+        {
+            this.Comments = new HashSet<Comment>();
+        }
 
     }
 }

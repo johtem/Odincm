@@ -29,6 +29,27 @@ namespace OdinCM.Models
                 context.Articles.Add(homePageArticle);
                 context.SaveChanges();
             }
+
+
+            if (!context.Customer.Any())
+            {
+                context.Customer.AddRange(
+                    new Customer
+                    {
+                        CustomerName = "Skf",
+                        CreatedAt = SystemClock.Instance.GetCurrentInstant(),
+                        UpdatedAt = SystemClock.Instance.GetCurrentInstant()
+                    },
+                    new Customer
+                    {
+                        CustomerName = "ABB",
+                        CreatedAt = SystemClock.Instance.GetCurrentInstant(),
+                        UpdatedAt = SystemClock.Instance.GetCurrentInstant()
+                    });
+
+                context.SaveChanges();
+
+            }
         }
     }
 }

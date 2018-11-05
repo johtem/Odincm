@@ -26,11 +26,13 @@ namespace OdinCM.Migrations
                     b.Property<DateTime>("PublishedDateTime")
                         .HasColumnName("Published");
 
-                    b.Property<string>("Slug")
-                        .IsRequired();
+                    b.Property<string>("Slug");
 
                     b.Property<string>("Topic")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasMaxLength(100);
+
+                    b.Property<int>("ViewCount");
 
                     b.HasKey("Id");
 
@@ -38,6 +40,36 @@ namespace OdinCM.Migrations
                         .IsUnique();
 
                     b.ToTable("Articles");
+                });
+
+            modelBuilder.Entity("OdinCM.Models.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int?>("ArticleId");
+
+                    b.Property<string>("Content")
+                        .IsRequired();
+
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasMaxLength(100);
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(100);
+
+                    b.Property<int>("IdArticle");
+
+                    b.Property<DateTime>("SubmittedDateTime")
+                        .HasColumnName("Submitted");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ArticleId");
+
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("OdinCM.Models.Customer", b =>
@@ -58,6 +90,13 @@ namespace OdinCM.Migrations
                     b.HasKey("CustomerID");
 
                     b.ToTable("Customer");
+                });
+
+            modelBuilder.Entity("OdinCM.Models.Comment", b =>
+                {
+                    b.HasOne("OdinCM.Models.Article", "Article")
+                        .WithMany("Comments")
+                        .HasForeignKey("ArticleId");
                 });
 #pragma warning restore 612, 618
         }
