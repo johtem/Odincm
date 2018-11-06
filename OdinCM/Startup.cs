@@ -110,7 +110,7 @@ namespace OdinCM
                 Title = "Odin CM Suggestion Feed",
                 Copyright = DateTime.UtcNow.Year.ToString(),
                 Description = "RSS Feed for Odin CM",
-                Url = new Uri("/", UriKind.Relative)
+                Url = new Uri(Configuration["Url"])
             });
 
             app.UseHttpsRedirection();
