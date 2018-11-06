@@ -2,7 +2,12 @@
 @model OdinCM.Pages.Articles.EditModel
 
 @{
-    ViewData["Title"] = "Edit";
+    var title = "Edit";
+    if (!string.IsNullOrEmpty(Model.Article.Topic))
+    {
+        title = Model.Article.Topic;
+    }
+    ViewData["Title"] = title;
 }
 
 <h2>Edit</h2>
