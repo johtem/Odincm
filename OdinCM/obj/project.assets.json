@@ -2656,6 +2656,21 @@
           "lib/netstandard1.0/_._": {}
         }
       },
+      "Microsoft.SyndicationFeed.ReaderWriter/1.0.2": {
+        "type": "package",
+        "dependencies": {
+          "System.Globalization": "4.3.0",
+          "System.Linq": "4.3.0",
+          "System.Runtime.Extensions": "4.3.0",
+          "System.Xml.ReaderWriter": "4.3.0"
+        },
+        "compile": {
+          "lib/netstandard1.3/Microsoft.SyndicationFeed.ReaderWriter.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard1.3/Microsoft.SyndicationFeed.ReaderWriter.dll": {}
+        }
+      },
       "Microsoft.VisualStudio.Web.CodeGeneration/2.1.5": {
         "type": "package",
         "dependencies": {
@@ -3067,6 +3082,21 @@
             "assetType": "native",
             "rid": "win-x86"
           }
+        }
+      },
+      "Snickler.RSSCore/1.0.3": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.AspNetCore.Http.Abstractions": "2.0.2",
+          "Microsoft.Extensions.Caching.Abstractions": "2.0.2",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "2.0.0",
+          "Microsoft.SyndicationFeed.ReaderWriter": "1.0.2"
+        },
+        "compile": {
+          "lib/netstandard2.0/Snickler.RSSCore.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Snickler.RSSCore.dll": {}
         }
       },
       "SQLitePCLRaw.bundle_green/1.1.11": {
@@ -7289,6 +7319,17 @@
         "version.txt"
       ]
     },
+    "Microsoft.SyndicationFeed.ReaderWriter/1.0.2": {
+      "sha512": "1j5wDqmw952zlPK/SHoMCtOGMCr1xe48meZuxhkgiksvtZ2rTI4pOPteuk92TVdFtdCauYMsqFyYSyyhp3SBUw==",
+      "type": "package",
+      "path": "microsoft.syndicationfeed.readerwriter/1.0.2",
+      "files": [
+        ".signature.p7s",
+        "lib/netstandard1.3/Microsoft.SyndicationFeed.ReaderWriter.dll",
+        "microsoft.syndicationfeed.readerwriter.1.0.2.nupkg.sha512",
+        "microsoft.syndicationfeed.readerwriter.nuspec"
+      ]
+    },
     "Microsoft.VisualStudio.Web.CodeGeneration/2.1.5": {
       "sha512": "3qwHeXKBSJFc/m5Bk8MIWH5S3CwzSZsYaOrQM4YooRYvteVJnoCv171FBdiZQB1Kgzf3qKQQV6ZT3MPZvLTU9w==",
       "type": "package",
@@ -8050,6 +8091,17 @@
         "runtimes/win-x86/native/sni.dll",
         "useSharedDesignerContext.txt",
         "version.txt"
+      ]
+    },
+    "Snickler.RSSCore/1.0.3": {
+      "sha512": "lQ+O4MXvmn/SJmrO5HUdl+84qiFqCdO7q1CC3oyoaeT8uHFsncV/pCoKqej5WHxamF+cTV7HGD05p7SkQMTKiA==",
+      "type": "package",
+      "path": "snickler.rsscore/1.0.3",
+      "files": [
+        "lib/netstandard1.3/Snickler.RSSCore.dll",
+        "lib/netstandard2.0/Snickler.RSSCore.dll",
+        "snickler.rsscore.1.0.3.nupkg.sha512",
+        "snickler.rsscore.nuspec"
       ]
     },
     "SQLitePCLRaw.bundle_green/1.1.11": {
@@ -12626,6 +12678,7 @@
       "Microsoft.NETCore.App >= 2.1.0",
       "Microsoft.VisualStudio.Web.CodeGeneration.Design >= 2.1.5",
       "NodaTime >= 2.4.2",
+      "Snickler.RSSCore >= 1.0.3",
       "System.Text.RegularExpressions >= 4.3.0",
       "Westwind.AspNetCore.Markdown >= 3.0.36"
     ]
@@ -12704,6 +12757,10 @@
           "NodaTime": {
             "target": "Package",
             "version": "[2.4.2, )"
+          },
+          "Snickler.RSSCore": {
+            "target": "Package",
+            "version": "[1.0.3, )"
           },
           "System.Text.RegularExpressions": {
             "target": "Package",

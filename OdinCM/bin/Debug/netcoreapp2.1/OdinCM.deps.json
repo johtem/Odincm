@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.1",
-    "signature": "1ab88c5bf179d4cee2634957cdd04fdb0f98cb43"
+    "signature": "7ea2356f76ddf086a7a1c41bb6a780d0cb9f9684"
   },
   "compilationOptions": {
     "defines": [
@@ -31,6 +31,7 @@
           "Microsoft.NETCore.App": "2.1.0",
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": "2.1.5",
           "NodaTime": "2.4.2",
+          "Snickler.RSSCore": "1.0.3",
           "System.Text.RegularExpressions": "4.3.0",
           "Westwind.AspNetCore.Markdown": "3.0.36"
         },
@@ -357,6 +358,23 @@
       },
       "Microsoft.NETCore.Platforms/2.1.0": {},
       "Microsoft.NETCore.Targets/2.1.0": {},
+      "Microsoft.SyndicationFeed.ReaderWriter/1.0.2": {
+        "dependencies": {
+          "System.Globalization": "4.3.0",
+          "System.Linq": "4.3.0",
+          "System.Runtime.Extensions": "4.3.0",
+          "System.Xml.ReaderWriter": "4.3.0"
+        },
+        "runtime": {
+          "lib/netstandard1.3/Microsoft.SyndicationFeed.ReaderWriter.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        },
+        "compile": {
+          "lib/netstandard1.3/Microsoft.SyndicationFeed.ReaderWriter.dll": {}
+        }
+      },
       "Microsoft.VisualStudio.Web.CodeGeneration/2.1.5": {
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection": "2.1.1",
@@ -529,6 +547,23 @@
         },
         "compile": {
           "lib/netstandard1.0/Remotion.Linq.dll": {}
+        }
+      },
+      "Snickler.RSSCore/1.0.3": {
+        "dependencies": {
+          "Microsoft.AspNetCore.Http.Abstractions": "2.1.1",
+          "Microsoft.Extensions.Caching.Abstractions": "2.1.1",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "2.1.1",
+          "Microsoft.SyndicationFeed.ReaderWriter": "1.0.2"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Snickler.RSSCore.dll": {
+            "assemblyVersion": "1.0.0.2",
+            "fileVersion": "1.0.0.2"
+          }
+        },
+        "compile": {
+          "lib/netstandard2.0/Snickler.RSSCore.dll": {}
         }
       },
       "SQLitePCLRaw.bundle_green/1.1.11": {
@@ -3822,6 +3857,13 @@
       "path": "microsoft.netcore.targets/2.1.0",
       "hashPath": "microsoft.netcore.targets.2.1.0.nupkg.sha512"
     },
+    "Microsoft.SyndicationFeed.ReaderWriter/1.0.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-1j5wDqmw952zlPK/SHoMCtOGMCr1xe48meZuxhkgiksvtZ2rTI4pOPteuk92TVdFtdCauYMsqFyYSyyhp3SBUw==",
+      "path": "microsoft.syndicationfeed.readerwriter/1.0.2",
+      "hashPath": "microsoft.syndicationfeed.readerwriter.1.0.2.nupkg.sha512"
+    },
     "Microsoft.VisualStudio.Web.CodeGeneration/2.1.5": {
       "type": "package",
       "serviceable": true,
@@ -3905,6 +3947,13 @@
       "sha512": "sha512-fK/76UmpC0FXBlGDFVPLJHQlDLYnGC+XY3eoDgCgbtrhi0vzbXDQ3n/IYHhqSKqXQfGw/u04A1drWs7rFVkRjw==",
       "path": "remotion.linq/2.2.0",
       "hashPath": "remotion.linq.2.2.0.nupkg.sha512"
+    },
+    "Snickler.RSSCore/1.0.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-lQ+O4MXvmn/SJmrO5HUdl+84qiFqCdO7q1CC3oyoaeT8uHFsncV/pCoKqej5WHxamF+cTV7HGD05p7SkQMTKiA==",
+      "path": "snickler.rsscore/1.0.3",
+      "hashPath": "snickler.rsscore.1.0.3.nupkg.sha512"
     },
     "SQLitePCLRaw.bundle_green/1.1.11": {
       "type": "package",
