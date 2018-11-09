@@ -1,0 +1,30 @@
+﻿@page
+@model OdinCM.Pages.Articles.AllModel
+@using Microsoft.AspNetCore.Mvc.Rendering
+@{
+    ViewData["Title"] = "All";
+}
+
+<h2>All Suggestions</h2>
+
+<p>
+    <a asp-page="Create">New Suggestion</a>
+</p>
+
+<pager total-pages="Model.TotalPages" current-page="Model.PageNumber" page="All"></pager>
+
+
+
+@foreach (var article in Model.Articles)
+{
+    @await Html.PartialAsync("_ArticleRow", article);
+
+}
+
+@section Styles {
+    <style>
+        .pageNumber {
+            margin: 0px 4px;
+        }
+    </style>
+}
