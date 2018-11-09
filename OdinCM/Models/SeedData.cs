@@ -45,6 +45,12 @@ namespace OdinCM.Models
                         CustomerName = "ABB",
                         CreatedAt = SystemClock.Instance.GetCurrentInstant(),
                         UpdatedAt = SystemClock.Instance.GetCurrentInstant()
+                    },
+                    new Customer
+                    {
+                        CustomerName = "Yara",
+                        CreatedAt = SystemClock.Instance.GetCurrentInstant(),
+                        UpdatedAt = SystemClock.Instance.GetCurrentInstant()
                     });
 
                 context.SaveChanges();

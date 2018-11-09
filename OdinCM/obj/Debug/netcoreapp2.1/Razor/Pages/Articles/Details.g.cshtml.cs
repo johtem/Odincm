@@ -130,7 +130,7 @@ Write(Model.Article.Topic);
             WriteLiteral("</span></h6>\r\n<br />\r\n\r\n");
             EndContext();
             BeginContext(865, 43, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("markdown", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "d9fe711921f3495680ace50c383a1b58", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("markdown", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "fb419d6ed7c54c498624d67c2861095b", async() => {
                 BeginContext(876, 21, false);
 #line 33 "C:\Users\790021957\Documents\Visual Studio 2017\Projects\OdinCM\OdinCM\Pages\Articles\Details.cshtml"
      Write(Model.Article.Content);
@@ -154,7 +154,7 @@ Write(Model.Article.Topic);
             WriteLiteral("\r\n\r\n<div>\r\n    ");
             EndContext();
             BeginContext(923, 62, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "47f6c36ad3264367b6bbf8b719e65b9b", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "28ccca2847ed4441a89adef9fbb6a65a", async() => {
                 BeginContext(977, 4, true);
                 WriteLiteral("Edit");
                 EndContext();
@@ -202,7 +202,7 @@ Write(Model.Article.Topic);
             WriteLiteral(" ");
             EndContext();
             BeginContext(1063, 37, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "75a8b82dafec4e1c8a28653a95eacde9", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "01deb2a0c4894ee59a293dd469e5df70", async() => {
                 BeginContext(1084, 12, true);
                 WriteLiteral("Back to Home");
                 EndContext();

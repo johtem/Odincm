@@ -69,6 +69,7 @@ namespace OdinCM
             //services.AddDbContext<OdinCMContext>(options =>
             //        options.UseSqlServer(Configuration.GetConnectionString("OdinCMContext")));
 
+
             // Add NodaTime clock for time-based testing. https://www.iana.org/time-zones
             services.AddSingleton<IClock>(SystemClock.Instance);
 
