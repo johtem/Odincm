@@ -38,7 +38,7 @@ namespace OdinCM.Pages.Articles
 
             if (Article == null)
             {
-                return NotFound();
+                return new ArticleNotFoundResult();
             }
             return Page();
         }
@@ -77,7 +77,7 @@ namespace OdinCM.Pages.Articles
             {
                 if (!ArticleExists(Article.Id))
                 {
-                    return NotFound();
+                    return new ArticleNotFoundResult();
                 }
                 else
                 {

@@ -18,6 +18,7 @@ using Snickler.RSSCore.Providers;
 using Snickler.RSSCore.Extensions;
 using Snickler.RSSCore.Models;
 using Microsoft.AspNetCore.Http;
+using OdinCM.SearchEngines;
 
 namespace OdinCM
 {
@@ -73,6 +74,8 @@ namespace OdinCM
             // Add NodaTime clock for time-based testing. https://www.iana.org/time-zones
             services.AddSingleton<IClock>(SystemClock.Instance);
 
+            services.AddScoped<IArticlesSearchEngine, ArticlesDbSearchEngine>();
+
             services.AddRouting(options => options.LowercaseUrls = true);
             services.AddHttpContextAccessor();
 
@@ -122,6 +125,9 @@ namespace OdinCM
 
             var scope = app.ApplicationServices.CreateScope();
             var context = scope.ServiceProvider.GetService<OdinCMContext>();
+
+            app.UseStatusCodePagesWithReExecute("/HttpErrors/{0}");
+
             app.UseMvc();
             SeedData.Initialize(context);
         }

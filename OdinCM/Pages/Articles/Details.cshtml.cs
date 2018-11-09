@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using OdinCM.Models;
 using NodaTime;
+using OdinCM.Helpers;
 
 namespace OdinCM.Pages.Articles
 {
@@ -33,7 +34,7 @@ namespace OdinCM.Pages.Articles
 
             if (Article == null)
             {
-                return NotFound();
+                return new ArticleNotFoundResult();
             }
 
             if (Request.Cookies[Article.Topic] == null)
@@ -57,7 +58,7 @@ namespace OdinCM.Pages.Articles
             Article = await _context.Articles.Include(x => x.Comments).SingleOrDefaultAsync(m => m.Id == comment.IdArticle);
 
             if (Article == null)
-                return NotFound();
+                return new ArticleNotFoundResult();
 
             if (!ModelState.IsValid)
                 return Page();
