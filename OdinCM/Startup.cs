@@ -84,7 +84,7 @@ namespace OdinCM
                 .AddRazorPagesOptions(options =>
                 {
                     options.Conventions.AddPageRoute("/Articles/Details", "Articles/{Slug?}");
-                    // options.Conventions.AddPageRoute("/Articles/Details", "Articles/{topicName?}");
+                    options.Conventions.AddPageRoute("/Articles/Details", @"Articles/Index");
                 });
 
 
@@ -99,6 +99,7 @@ namespace OdinCM
 
                 //app.UseBrowserLink();
                 app.UseDeveloperExceptionPage();
+                app.UseDatabaseErrorPage();
             }
             else
             {
@@ -106,7 +107,12 @@ namespace OdinCM
                 app.UseHsts();
             }
 
+            app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseCookiePolicy();
+
+            app.UseAuthentication();
+
             app.UseStaticHttpContext();
 
             app.UseRSSFeed("/articles/feed", new Snickler.RSSCore.Models.RSSFeedOptions
@@ -116,12 +122,6 @@ namespace OdinCM
                 Description = "RSS Feed for Odin CM",
                 Url = new Uri(Configuration["Url"])
             });
-
-            app.UseHttpsRedirection();
-           
-            app.UseCookiePolicy();
-
-  
 
             var scope = app.ApplicationServices.CreateScope();
             var context = scope.ServiceProvider.GetService<OdinCMContext>();

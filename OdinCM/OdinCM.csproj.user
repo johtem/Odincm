@@ -13,5 +13,9 @@
     <WebStackScaffolding_DbContextTypeFullName>OdinCM.Models.OdinCMContext</WebStackScaffolding_DbContextTypeFullName>
     <RazorPage_SelectedScaffolderID>Microsoft.AspNet.Scaffolding.Mvc.RazorPageScaffolder</RazorPage_SelectedScaffolderID>
     <RazorPage_SelectedScaffolderCategoryPath>root/Common/RazorPage</RazorPage_SelectedScaffolderCategoryPath>
+    <ActiveDebugProfile>OdinCM</ActiveDebugProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DebuggerFlavor>ProjectDebugger</DebuggerFlavor>
   </PropertyGroup>
 </Project>
