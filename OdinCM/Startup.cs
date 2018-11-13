@@ -125,11 +125,14 @@ namespace OdinCM
 
             var scope = app.ApplicationServices.CreateScope();
             var context = scope.ServiceProvider.GetService<OdinCMContext>();
+            var identityContext = scope.ServiceProvider.GetService<CoreOdinIdentityContext>();
 
             app.UseStatusCodePagesWithReExecute("/HttpErrors/{0}");
 
             app.UseMvc();
             SeedData.Initialize(context);
+
+            CoreOdinIdentityContext.SeedData(identityContext);
         }
     }
 }

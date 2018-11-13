@@ -1,22 +1,47 @@
 ﻿<!DOCTYPE html>
+@using System.IO
+@inject Microsoft.AspNetCore.Hosting.IHostingEnvironment env
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor context
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="manifest" href="/manifest.json">
+
+    <!-- Begin: Icon fallbacks for browsers where PWAs are not yet supported -->
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/icons/icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/images/icons/icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/icons/icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/icons/icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/icons/icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/icons/icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/icons/icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/icons/icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/images/icons/icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/icons/icon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/images/icons/icon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/icons/icon-16x16.png">
+    <!-- End: Icon fallbacks -->
+
+
     <title>@ViewData["Title"] - Odin CM</title>
-
-    @*This Razor comment is not sent to the client*@
-
+    @{
+        var ThemeName = "";
+        var ThemeFileName = "siteTheme";
+        if (context.HttpContext.Request.Cookies.TryGetValue("OdinCM.Theme", out ThemeName))
+        {
+            if (File.Exists(System.IO.Path.Combine(env.WebRootPath, "css", ThemeName + ".min.css")))
+            {
+                ThemeFileName = ThemeName;
+            }
+        }
+    }
     <environment include="Development">
-        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
-        <link rel="stylesheet" href="~/css/site.css" />
+        <link rel="stylesheet" href="~/css/@(ThemeFileName).css" />
     </environment>
     <environment exclude="Development">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
-              integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-              crossorigin="anonymous" />
-        <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/@(ThemeFileName).min.css" asp-append-version="true" />
     </environment>
     @RenderSection("styles", false)
 </head>
@@ -69,16 +94,16 @@
     </div>
 
     <footer>
-        <div class="row">
-            <div class-"col-8">
-                &copy; @DateTime.UtcNow.Year - <a target="_blank" href="https://github.com/csharpfritz/CoreWiki">OdinCM: Odin Customer Management</a>
+        
+            <div class="row justify-content-between">
+                <div class="col-sm-12 col-md-8">
+                    &copy; @DateTime.UtcNow.Year - OdinCM: Odin Customer Management
+                </div>
+                <div class="col-sm-12 col-md-auto">
+                    <partial name="_ThemePartial" />
+                </div>
             </div>
-            <div class="col-4 ml-auto">
-                <partial name="_ThemePartial" />
-            </div>
-        </div>
-
-    </footer>
+</footer>
 
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>

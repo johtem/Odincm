@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
+    <UserSecretsId>7b1e67c2-befb-4e2e-957d-603f8b2e5491</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Identity\Services\"/>
+    <Folder Include="Areas\Identity\Services\" />
     <Folder Include="wwwroot\lib\bootstrap\" />
     <Folder Include="wwwroot\lib\moment\" />
     <Folder Include="wwwroot\lib\simplemde\" />
