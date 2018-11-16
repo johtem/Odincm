@@ -11,9 +11,9 @@
 {"Query", searchResult?.Query ?? ""}
 };
 }
-<h1 class="h1">Search CoreWiki</h1>
+<h1 class="h1">Search Suggestions</h1>
 
-<form action="/Articles/search" method="get" class="my-2">
+<form action="/search" method="get" class="my-2">
     <div class="form-group">
         <div class="input-group">
             <input class="form-control" type="text" name="Query" value="@searchResult?.Query" placeholder="Search for articles on CoreWiki" />
@@ -36,12 +36,32 @@
            current-page="searchResult.CurrentPage"
            total-pages="searchResult.TotalPages">
     </pager>
-
-    foreach (var article in searchResult.Results)
-    {
-        @await      Html.PartialAsync("_ArticleRow", article)
+    <div class="cwiki-flex-container">
+        @foreach (var article in searchResult.Results)
+        {
+            @await Html.PartialAsync("_ArticleRow", article)
+        }
+    </div>
 
 }
+@section Styles {
+    <style>
+        .cwiki-flex-container {
+            padding: 0;
+            margin: 0;
+            display: -webkit-box;
+            display: -moz-box;
+            display: -ms-flexbox;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-flex-flow: row wrap;
+            justify-content: space-around;
+        }
+
+        .cwiki-flex-item {
+            width: 360px;
+            color: white;
+            border-radius: 20px;
+        }
+    </style>
 }
-
-

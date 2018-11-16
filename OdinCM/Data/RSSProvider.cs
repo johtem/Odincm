@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
+using OdinCM.Configuration;
 using OdinCM.Models;
 using Snickler.RSSCore.Models;
 using Snickler.RSSCore.Providers;
@@ -13,14 +15,14 @@ namespace OdinCM.Data
     public class RSSProvider : IRSSProvider
     {
 
-        private OdinCMContext _context;
+        private readonly OdinCMContext _context;
+        private readonly Uri baseURL;
 
-        private IConfiguration Configuration;
-
-        public RSSProvider(OdinCMContext context, IConfiguration config)
+        
+        public RSSProvider(OdinCMContext context, IOptionsSnapshot<AppSettings> settings)
         {
             _context = context;
-            Configuration = config;
+            baseURL = settings.Value.Url;
         }
 
 
@@ -29,13 +31,15 @@ namespace OdinCM.Data
             var articles = await _context.Articles.OrderByDescending(a => a.Published).Take(10).ToListAsync();
             return articles.Select(rssItem =>
             {
+                var absoluteURL = new Uri(baseURL, $"/Articles/{rssItem.Slug}");
+
                 var wikiItem = new RSSItem
                 {
-                    Content = rssItem.Content, //TODO: May need to truncate long article
-                    PermaLink = new Uri($"{Configuration["Url"]}/Articles/{rssItem.Slug}"),
-                    LinkUri = new Uri($"{Configuration["Url"]}/Articles/{rssItem.Slug}"),
-                    PublishDate = rssItem.PublishedDateTime,
-                    LastUpdated = rssItem.PublishedDateTime,
+                    Content = rssItem.Content, 
+                    PermaLink = absoluteURL,
+                    LinkUri = absoluteURL,
+                    PublishDate = rssItem.Published.ToDateTimeUtc(),
+                    LastUpdated = rssItem.Published.ToDateTimeUtc(),
                     Title = rssItem.Topic
                 };
 

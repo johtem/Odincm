@@ -37,15 +37,13 @@ namespace OdinCM.Pages.Articles
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(string id)
+        public async Task<IActionResult> OnPostAsync(int? id)
         {
             if (id == null)
             {
                 return NotFound();
-            } else if (id == "HomePage")
-            {
-                return NotFound();
-            }
+            } 
+
 
             Article = await _context.Articles.FindAsync(id);
 
@@ -55,7 +53,7 @@ namespace OdinCM.Pages.Articles
                 await _context.SaveChangesAsync();
             }
 
-            return RedirectToPage("./Index");
+            return RedirectToPage("./Details");
         }
     }
 }

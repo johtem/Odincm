@@ -19,27 +19,13 @@ using Snickler.RSSCore.Extensions;
 using Snickler.RSSCore.Models;
 using Microsoft.AspNetCore.Http;
 using OdinCM.SearchEngines;
+using OdinCM.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace OdinCM
 {
 
-    public static class StaticHttpContextExtensions
-    {
-        public static void StaticHttpContextAccessor(this IServiceCollection services)
-        {
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-        }
-
-        public static IApplicationBuilder UseStaticHttpContext(this IApplicationBuilder app)
-        {
-            var httpContextAccessor = app.ApplicationServices.GetRequiredService<IHttpContextAccessor>();
-            OdinCM.Data.HttpContext.Configure(httpContextAccessor);
-            return app;
-        }
-
-    }
-
-    
+ 
 
     public class Startup
     {
@@ -54,6 +40,7 @@ namespace OdinCM
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRSSFeed<RSSProvider>();
+            services.Configure<AppSettings>(Configuration);
 
             services.Configure<CookiePolicyOptions>(options =>
             {
@@ -87,12 +74,14 @@ namespace OdinCM
                     options.Conventions.AddPageRoute("/Articles/Details", @"Articles/Index");
                 });
 
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            
+            services.AddProgressiveWebApp();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IOptionsSnapshot<AppSettings> settings)
         {
             if (env.IsDevelopment())
             {
@@ -113,14 +102,13 @@ namespace OdinCM
 
             app.UseAuthentication();
 
-            app.UseStaticHttpContext();
 
             app.UseRSSFeed("/articles/feed", new Snickler.RSSCore.Models.RSSFeedOptions
             {
                 Title = "Odin CM Suggestion Feed",
                 Copyright = DateTime.UtcNow.Year.ToString(),
                 Description = "RSS Feed for Odin CM",
-                Url = new Uri(Configuration["Url"])
+                Url = settings.Value.Url
             });
 
             var scope = app.ApplicationServices.CreateScope();
