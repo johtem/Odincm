@@ -21,6 +21,10 @@ using Microsoft.AspNetCore.Http;
 using OdinCM.SearchEngines;
 using OdinCM.Configuration;
 using Microsoft.Extensions.Options;
+using OdinCM.Helpers;
+using Microsoft.ApplicationInsights.Extensibility;
+using OdinCM.Services;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace OdinCM
 {
@@ -70,11 +74,16 @@ namespace OdinCM
             services.AddMvc()
                 .AddRazorPagesOptions(options =>
                 {
+                    options.Conventions.AddPageRoute("/Articles/Edit", "/Articles/{Slug}/Edit");
+                    options.Conventions.AddPageRoute("/Articles/Delete", "Articles/{Slug}/Delete");
                     options.Conventions.AddPageRoute("/Articles/Details", "Articles/{Slug?}");
                     options.Conventions.AddPageRoute("/Articles/Details", @"Articles/Index");
                 });
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            // services.AddTransient<EmailNotifier>();  //To activate email notification
+            services.AddSingleton<IEmailSender, EmailNotifier>();
 
             services.AddProgressiveWebApp();
 
@@ -83,6 +92,13 @@ namespace OdinCM
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IOptionsSnapshot<AppSettings> settings)
         {
+
+            var initializer = new ArticleNotFoundInitializer();
+
+            var configuration = app.ApplicationServices.GetService<TelemetryConfiguration>();
+            configuration.TelemetryInitializers.Add(initializer);
+
+
             if (env.IsDevelopment())
             {
 
@@ -118,8 +134,8 @@ namespace OdinCM
             app.UseStatusCodePagesWithReExecute("/HttpErrors/{0}");
 
             app.UseMvc();
-            SeedData.Initialize(context);
 
+            SeedData.Initialize(context);
             CoreOdinIdentityContext.SeedData(identityContext);
         }
     }

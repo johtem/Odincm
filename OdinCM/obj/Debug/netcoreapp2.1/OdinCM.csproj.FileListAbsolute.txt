@@ -44,7 +44,6 @@ C:\Users\790021957\Documents\Visual Studio 2017\Projects\OdinCM\OdinCM\obj\Debug
 C:\Users\790021957\Documents\Visual Studio 2017\Projects\OdinCM\OdinCM\obj\Debug\netcoreapp2.1\OdinCM.csproj.CopyComplete
 C:\Users\790021957\Documents\Visual Studio 2017\Projects\OdinCM\OdinCM\obj\Debug\netcoreapp2.1\Razor\Pages\Components\CreateComments\CreateComments.g.cshtml.cs
 C:\Users\790021957\Documents\Visual Studio 2017\Projects\OdinCM\OdinCM\obj\Debug\netcoreapp2.1\Razor\Pages\Components\ListComments\ListComments.g.cshtml.cs
-C:\Users\790021957\Documents\Visual Studio 2017\Projects\OdinCM\OdinCM\obj\Debug\netcoreapp2.1\Razor\Pages\Articles\ArticleNotFound.g.cshtml.cs
 C:\Users\790021957\Documents\Visual Studio 2017\Projects\OdinCM\OdinCM\obj\Debug\netcoreapp2.1\Razor\Pages\HttpErrors\404.g.cshtml.cs
 C:\Users\790021957\Documents\Visual Studio 2017\Projects\OdinCM\OdinCM\obj\Debug\netcoreapp2.1\Razor\Pages\Articles\Search.g.cshtml.cs
 C:\Users\790021957\Documents\Visual Studio 2017\Projects\OdinCM\OdinCM\obj\Debug\netcoreapp2.1\Razor\Pages\Articles\_ArticleRow.g.cshtml.cs
@@ -87,3 +86,5 @@ C:\Users\790021957\Documents\Visual Studio 2017\Projects\OdinCM\OdinCM\obj\Debug
 C:\Users\790021957\Documents\Visual Studio 2017\Projects\OdinCM\OdinCM\obj\Debug\netcoreapp2.1\Razor\Pages\Shared\_CommentsPartial.g.cshtml.cs
 C:\Users\790021957\Documents\Visual Studio 2017\Projects\OdinCM\OdinCM\obj\Debug\netcoreapp2.1\Razor\Pages\Shared\_DisqusComments.g.cshtml.cs
 C:\Users\790021957\Documents\Visual Studio 2017\Projects\OdinCM\OdinCM\obj\Debug\netcoreapp2.1\OdinCM.csprojAssemblyReference.cache
+C:\Users\790021957\Documents\Visual Studio 2017\Projects\OdinCM\OdinCM\obj\Debug\netcoreapp2.1\Razor\Pages\Articles\ArticleNotFound.g.cshtml.cs
+C:\Users\790021957\Documents\Visual Studio 2017\Projects\OdinCM\OdinCM\obj\Debug\netcoreapp2.1\UserSecretsAssemblyInfo.cs

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ using OdinCM.Models;
 
 namespace OdinCM.Pages.Articles
 {
+    [Authorize("CanDeleteArticles")]
     public class DeleteModel : PageModel
     {
         private readonly OdinCM.Models.OdinCMContext _context;
@@ -21,14 +23,14 @@ namespace OdinCM.Pages.Articles
         [BindProperty]
         public Article Article { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(string slug)
         {
-            if (id == null)
+            if (slug == null)
             {
                 return NotFound();
             }
 
-            Article = await _context.Articles.FirstOrDefaultAsync(m => m.Id == id);
+            Article = await _context.Articles.FirstOrDefaultAsync(m => m.Slug == slug);
 
             if (Article == null)
             {
@@ -37,15 +39,15 @@ namespace OdinCM.Pages.Articles
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(int? id)
+        public async Task<IActionResult> OnPostAsync(string slug)
         {
-            if (id == null)
+            if (slug == null)
             {
                 return NotFound();
             } 
 
 
-            Article = await _context.Articles.FindAsync(id);
+            Article = await _context.Articles.SingleOrDefaultAsync(m => m.Slug == slug);
 
             if (Article != null)
             {
@@ -53,7 +55,7 @@ namespace OdinCM.Pages.Articles
                 await _context.SaveChangesAsync();
             }
 
-            return RedirectToPage("./Details");
+            return RedirectToPage("./All");
         }
     }
 }

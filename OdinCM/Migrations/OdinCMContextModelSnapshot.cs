@@ -21,6 +21,8 @@ namespace OdinCM.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<Guid>("AuthorId");
+
                     b.Property<string>("Content");
 
                     b.Property<DateTime>("PublishedDateTime")
@@ -40,6 +42,10 @@ namespace OdinCM.Migrations
                         .IsUnique();
 
                     b.ToTable("Articles");
+
+                    b.HasData(
+                        new { Id = 1, AuthorId = new Guid("bddf1170-7034-49fa-90d0-3030f45cdfbf"), Content = "This is the default home page. Please change me!", PublishedDateTime = new DateTime(2018, 11, 21, 8, 31, 14, 367, DateTimeKind.Utc), Slug = "home-page", Topic = "HomePage", ViewCount = 0 }
+                    );
                 });
 
             modelBuilder.Entity("OdinCM.Models.Comment", b =>
@@ -48,6 +54,8 @@ namespace OdinCM.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<int?>("ArticleId");
+
+                    b.Property<Guid>("AuthorId");
 
                     b.Property<string>("Content")
                         .IsRequired();
@@ -90,6 +98,12 @@ namespace OdinCM.Migrations
                     b.HasKey("CustomerID");
 
                     b.ToTable("Customer");
+
+                    b.HasData(
+                        new { CustomerID = 1, CreatedAtDateTime = new DateTime(2018, 11, 21, 8, 31, 14, 368, DateTimeKind.Utc), CustomerName = "Skf", UpdatedAtDateTime = new DateTime(2018, 11, 21, 8, 31, 14, 368, DateTimeKind.Utc) },
+                        new { CustomerID = 2, CreatedAtDateTime = new DateTime(2018, 11, 21, 8, 31, 14, 368, DateTimeKind.Utc), CustomerName = "ABB", UpdatedAtDateTime = new DateTime(2018, 11, 21, 8, 31, 14, 368, DateTimeKind.Utc) },
+                        new { CustomerID = 3, CreatedAtDateTime = new DateTime(2018, 11, 21, 8, 31, 14, 368, DateTimeKind.Utc), CustomerName = "Yara", UpdatedAtDateTime = new DateTime(2018, 11, 21, 8, 31, 14, 368, DateTimeKind.Utc) }
+                    );
                 });
 
             modelBuilder.Entity("OdinCM.Models.Comment", b =>

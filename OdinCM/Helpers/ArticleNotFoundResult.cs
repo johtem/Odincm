@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.ApplicationInsights;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +9,22 @@ namespace OdinCM.Helpers
 {
     public class ArticleNotFoundResult : ViewResult
     {
-        public ArticleNotFoundResult()
+
+        private static TelemetryClient telemetry = new TelemetryClient();
+
+        public ArticleNotFoundResult(String name = "")
         {
+            if (!string.IsNullOrEmpty(name))  // do not track if no name is submitted
+            {
+                var documentDictionary = new Dictionary<string, string>
+            {
+                {"Document", name }
+            };
+
+                telemetry.TrackEvent("Missing Document", documentDictionary);
+            }
+            
+
             ViewName = "ArticleNotFound";
             StatusCode = 404;
         }

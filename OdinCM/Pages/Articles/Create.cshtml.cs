@@ -9,6 +9,8 @@ using NodaTime;
 using OdinCM.Models;
 using OdinCM.Helpers;
 using Microsoft.Extensions.Logging;
+using OdinCM.Areas.Identity.Data;
+using System.Security.Claims;
 
 namespace OdinCM.Pages.Articles
 {
@@ -38,6 +40,7 @@ namespace OdinCM.Pages.Articles
 
             var slug = UrlHelpers.URLFriendly(Article.Topic.ToLower());
             Article.Slug = slug;
+            Article.AuthorId = Guid.Parse(this.User.FindFirstValue(ClaimTypes.NameIdentifier)); 
 
             if (!ModelState.IsValid)
             {

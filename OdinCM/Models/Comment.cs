@@ -30,6 +30,9 @@ namespace OdinCM.Models
         [NotMapped]
         public Instant Submitted { get; set; }
 
+        [Required]
+        public Guid AuthorId { get; set; } = Guid.NewGuid();
+
         // Buddy property (?)
         [Obsolete("This property only exists for EF-serialization purposes")]
         [DataType(DataType.DateTime)]
