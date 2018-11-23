@@ -25,7 +25,7 @@
     <markdown>@Model.Article.Content</markdown>
 
     <div>
-        <a asp-page="./Edit" asp-route-id="@Model.Article.Id">Edit</a>
+        <a asp-page="./Edit" asp-route-slug="@Model.Article.Slug">Edit</a>
         @if (Model.Article.Slug != "home-page")
         {
             <text> |</text> <a href="~/Articles">Back to Home</a>

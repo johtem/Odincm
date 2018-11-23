@@ -12,7 +12,7 @@ namespace OdinCM.Pages.Customers
     public class IndexModel : PageModel
     {
         private readonly OdinCM.Models.OdinCMContext _context;
-        private const int _PageSize = 2;
+        private const int _PageSize = 10;
 
         public IndexModel(OdinCM.Models.OdinCMContext context)
         {

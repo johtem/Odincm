@@ -25,7 +25,9 @@ namespace OdinCM
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseApplicationInsights()
-                .UseStartup<Startup>();
+            .UseKestrel()
+            .UseIISIntegration()
+            .UseApplicationInsights()
+            .UseStartup<Startup>();
     }
 }

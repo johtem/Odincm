@@ -20,7 +20,7 @@ namespace OdinCM.Pages.Articles
         private readonly IClock _clock;
         private readonly ILogger _loggerFactory;
 
-        public CreateModel(OdinCM.Models.OdinCMContext context, IClock clock, ILoggerFactory loggerFactory)
+        public CreateModel(OdinCMContext context, IClock clock, ILoggerFactory loggerFactory)
         {
             _context = context;
             _clock = clock;
@@ -63,6 +63,15 @@ namespace OdinCM.Pages.Articles
 
             _context.Articles.Add(Article);
             await _context.SaveChangesAsync();
+
+            var articlesToCreateFromLinks = ArticleHelpers.GetArticlesToCreate(_context, Article, createSlug: true)
+                .ToList();
+
+            if (articlesToCreateFromLinks.Count > 0)
+            {
+                return RedirectToPage("CreateArticleFromLink", new { id = slug });
+            }
+
 
             return Redirect($"/Articles/{Article.Slug}");
         }
