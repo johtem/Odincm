@@ -135,7 +135,7 @@ using OdinCM.Helpers;
             WriteLiteral("\"></span>\r\n    </h6>\r\n    <br />\r\n\r\n    ");
             EndContext();
             BeginContext(743, 43, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("markdown", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "f2804363f4db4aa1b4a19c4770a8637d", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("markdown", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "b6271d0ad7214d45952cf7cc63a7ffe4", async() => {
                 BeginContext(754, 21, false);
 #line 25 "C:\Users\790021957\Documents\Visual Studio 2017\Projects\OdinCM\OdinCM\Pages\Articles\Details.cshtml"
          Write(Model.Article.Content);
@@ -159,7 +159,7 @@ using OdinCM.Helpers;
             WriteLiteral("\r\n\r\n    <div>\r\n        ");
             EndContext();
             BeginContext(809, 66, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "39b3dd209815417eaa4c2d3397645b37", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "8cb9471159204f68a10a81a569fab7ee", async() => {
                 BeginContext(867, 4, true);
                 WriteLiteral("Edit");
                 EndContext();
@@ -207,7 +207,7 @@ using OdinCM.Helpers;
             WriteLiteral(" ");
             EndContext();
             BeginContext(965, 37, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "9381f0d83d6248a18c253a89c57471a3", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "a0a0fe7abc674ed5a29929f8db72d038", async() => {
                 BeginContext(986, 12, true);
                 WriteLiteral("Back to Home");
                 EndContext();
@@ -236,7 +236,7 @@ using OdinCM.Helpers;
             WriteLiteral("\r\n    </div>\r\n\r\n    ");
             EndContext();
             BeginContext(1035, 49, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("partial", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.SelfClosing, "bda499b213ca4b229269fe1ca5a58c29", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("partial", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.SelfClosing, "ada9108f6bac4016be04ae472b776b8a", async() => {
             }
             );
             __Microsoft_AspNetCore_Mvc_TagHelpers_PartialTagHelper = CreateTagHelper<global::Microsoft.AspNetCore.Mvc.TagHelpers.PartialTagHelper>();

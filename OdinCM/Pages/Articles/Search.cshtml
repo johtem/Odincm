@@ -2,6 +2,7 @@
 @using System.Collections.Generic
 @using Helpers
 @using Microsoft.AspNetCore.Mvc.Rendering
+@using Humanizer;
 @model OdinCM.Pages.Articles.SearchModel
 @{
     ViewData["Title"] = "Search";
@@ -13,10 +14,10 @@
 }
 <h1 class="h1">Search Suggestions</h1>
 
-<form action="/search" method="get" class="my-2">
+<form action="/articles/search" method="get" class="my-2">
     <div class="form-group">
         <div class="input-group">
-            <input class="form-control" type="text" name="Query" value="@searchResult?.Query" placeholder="Search for articles on CoreWiki" />
+            <input class="form-control" type="text" name="Query" value="@searchResult?.Query" placeholder="Search for articles on Odin" />
             <div class="input-group-append">
                 <button class="btn badge-primary" type="submit">Search</button>
             </div>
@@ -27,7 +28,7 @@
 @if (searchResult != null)
 {
     <div class="mb-2">
-        @StringHelpers.Pluralize("result", "results", searchResult.TotalResults, prependCount: true)
+        @("result".ToQuantity(searchResult.TotalResults))
         found for <strong>@searchResult.Query</strong>
     </div>
 

@@ -12,7 +12,7 @@ namespace OdinCM.Pages.Articles
     public class AllModel : PageModel
     {
         private readonly OdinCMContext _Context;
-        private const int _PageSize = 6;
+        private const int _PageSize = 3;
 
         public AllModel(OdinCMContext Context)
         {
