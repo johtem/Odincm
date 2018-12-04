@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -14,11 +15,10 @@ namespace OdinCM.Pages.Articles
 {
     public class EditModel : PageModel
     {
-        private readonly OdinCM.Models.OdinCMContext _context;
-
+        private readonly OdinCMContext _context;
         private readonly IClock _clock;
 
-        public EditModel(OdinCM.Models.OdinCMContext context, IClock clock)
+        public EditModel(OdinCMContext context, IClock clock)
         {
             _context = context;
             _clock = clock;
@@ -50,13 +50,18 @@ namespace OdinCM.Pages.Articles
                 return Page();
             }
 
-            var existingArticle = _context.Articles.AsNoTracking().First(a => a.Topic == Article.Topic);
+            var existingArticle = _context.Articles.AsNoTracking().First(a => a.Id == Article.Id);
             Article.ViewCount = existingArticle.ViewCount;
-
-            _context.Attach(Article).State = EntityState.Modified;
+            Article.Version = existingArticle.Version + 1;
 
             //check if the slug already exists in the database.  
-            var slug = UrlHelpers.URLFriendly(Article.Topic.ToLower());
+            var slug = UrlHelpers.URLFriendly(Article.Topic);
+            if (String.IsNullOrWhiteSpace(slug))
+            {
+                ModelState.AddModelError("Article.Topic", "The Topic must contain at least one alphanumeric character.");
+                return Page();
+            }
+
             var isAvailable = !_context.Articles.Any(x => x.Slug == slug && x.Id != Article.Id);
 
             if (isAvailable == false)
@@ -65,13 +70,35 @@ namespace OdinCM.Pages.Articles
                 return Page();
             }
 
+            // Verify if there are links to new articles
+            var articlesToCreateFromLinks = ArticleHelpers.GetArticlesToCreate(_context, Article, createSlug: true).ToList();
+
+            // Force an update on the existing Article
+            _context.Attach(Article).State = EntityState.Modified;
+
             Article.Published = _clock.GetCurrentInstant();
             Article.Slug = slug;
+            Article.AuthorId = Guid.Parse(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
+            Article.AuthorName = User.Identity.Name;
 
+            if (!string.Equals(Article.Slug, existingArticle.Slug, StringComparison.InvariantCulture))
+            {
+                var historical = new SlugHistory()
+                {
+                    OldSlug = existingArticle.Slug,
+                    Article = Article,
+                    Added = _clock.GetCurrentInstant()
+                };
+
+                _context.Attach(historical).State = EntityState.Added;
+            }
+
+            AddNewArticleVersion();
 
             try
             {
                 await _context.SaveChangesAsync();
+
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -85,7 +112,21 @@ namespace OdinCM.Pages.Articles
                 }
             }
 
+           
+            if (articlesToCreateFromLinks.Count > 0)
+            {
+                return RedirectToPage("CreateArticleFromLink", new { id = slug });
+            }
+
+
             return Redirect($"/Articles/{(Article.Slug == "home-page" ? "" : Article.Slug)}");
+        }
+
+        private void AddNewArticleVersion()
+        {
+
+            _context.ArticleHistories.Add(ArticleHistory.FromArticle(Article));
+
         }
 
         private bool ArticleExists(int id)

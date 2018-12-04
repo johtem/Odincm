@@ -11,6 +11,7 @@ using OdinCM.Helpers;
 using Microsoft.Extensions.Logging;
 using OdinCM.Areas.Identity.Data;
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 
 namespace OdinCM.Pages.Articles
 {
@@ -18,27 +19,52 @@ namespace OdinCM.Pages.Articles
     {
         private readonly OdinCMContext _context;
         private readonly IClock _clock;
-        private readonly ILogger _loggerFactory;
+        public ILogger Logger { get; private set; }
 
         public CreateModel(OdinCMContext context, IClock clock, ILoggerFactory loggerFactory)
         {
             _context = context;
             _clock = clock;
-            _loggerFactory = loggerFactory.CreateLogger("CreatePage");
+            this.Logger = loggerFactory.CreateLogger("CreatePage");
         }
 
-        public IActionResult OnGet()
+        public async Task<IActionResult> OnGetAsync(string slug)
         {
+            if (string.IsNullOrEmpty(slug))
+            {
+                return Page();
+            }
+
+            Article article = await _context.Articles.SingleOrDefaultAsync(m => m.Slug == slug);
+
+            if (article != null)
+            {
+                return Redirect($"/Articles/{slug}/Edit");
+            }
+
+
+            Article = new Article()
+            {
+                Topic = UrlHelpers.SlugToTopic(slug)
+            };
+
             return Page();
         }
+
+
 
         [BindProperty]
         public Article Article { get; set; }
 
         public async Task<IActionResult> OnPostAsync()
         {
-
-            var slug = UrlHelpers.URLFriendly(Article.Topic.ToLower());
+            var slug = UrlHelpers.URLFriendly(Article.Topic);
+            if (String.IsNullOrWhiteSpace(slug))
+            {
+                ModelState.AddModelError("Article.Topic", "The Topic must contain at least one alphanumeric character.");
+                return Page();
+            }
+          
             Article.Slug = slug;
             Article.AuthorId = Guid.Parse(this.User.FindFirstValue(ClaimTypes.NameIdentifier)); 
 
@@ -46,10 +72,9 @@ namespace OdinCM.Pages.Articles
             {
                 return Page();
             }
-
-               
-
-            _loggerFactory.LogInformation($"Creating page with slug: {slug}");
+  
+            // Check if slug already exist in database
+            Logger.LogWarning($"Creating page with slug: {slug}");
             var isAvailable = !_context.Articles.Any(x => x.Slug == slug);
 
             if (isAvailable == false)
@@ -60,8 +85,8 @@ namespace OdinCM.Pages.Articles
 
             Article.Published = _clock.GetCurrentInstant();
             
-
             _context.Articles.Add(Article);
+            _context.ArticleHistories.Add(ArticleHistory.FromArticle(Article));
             await _context.SaveChangesAsync();
 
             var articlesToCreateFromLinks = ArticleHelpers.GetArticlesToCreate(_context, Article, createSlug: true)

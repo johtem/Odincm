@@ -25,15 +25,20 @@ using OdinCM.Helpers;
 using Microsoft.ApplicationInsights.Extensibility;
 using OdinCM.Services;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Localization;
+using System.Globalization;
+using System.Reflection;
+using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.Mvc;
 
 namespace OdinCM
 {
 
- 
+
 
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IHostingEnvironment hostingEnviroment)
         {
             Configuration = configuration;
         }
@@ -55,7 +60,8 @@ namespace OdinCM
 
             services.AddEntityFrameworkSqlite()
                     .AddDbContext<OdinCMContext>(options =>
-                            options.UseSqlite("Data Source=./wiki.db")
+                            options.UseSqlite(Configuration.GetConnectionString("OdinData"))
+                            .EnableSensitiveDataLogging(true)  
                     );
 
             //services.AddDbContext<OdinCMContext>(options =>
@@ -66,26 +72,45 @@ namespace OdinCM
             services.AddSingleton<IClock>(SystemClock.Instance);
 
             services.AddScoped<IArticlesSearchEngine, ArticlesDbSearchEngine>();
+            services.AddScoped<ITemplateProvider, TemplateProvider>();
+            services.AddScoped<ITemplateParser, TemplateParser>();
+            services.AddScoped<IEmailMessageFormatter, EmailMessageFormatter>();
+            services.AddScoped<IEmailNotifier, EmailNotifier>();
+            services.AddScoped<INotificationService, NotificationService>();
+
+            services.AddScoped<IArticlesSearchEngine, ArticlesDbSearchEngine>();
 
             services.AddRouting(options => options.LowercaseUrls = true);
             services.AddHttpContextAccessor();
 
+            services.AddLocalization(options => options.ResourcesPath = "Globalization");
 
-            services.AddMvc()
+
+            services.AddMvc(options =>
+            {
+                options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+            })
+                // Add support for finding localized views, based on file name suffix, e.g. Index.fr.cshtml
+                .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+                // Add support for localizing strings in data annotations (e.g. validation messages) via the
+                // IStringLocalizer abstractions.
+                .AddDataAnnotationsLocalization()
                 .AddRazorPagesOptions(options =>
                 {
                     options.Conventions.AddPageRoute("/Articles/Edit", "/Articles/{Slug}/Edit");
                     options.Conventions.AddPageRoute("/Articles/Delete", "Articles/{Slug}/Delete");
                     options.Conventions.AddPageRoute("/Articles/Details", "Articles/{Slug?}");
                     options.Conventions.AddPageRoute("/Articles/Details", @"Articles/Index");
+                    options.Conventions.AddPageRoute("/Articles/Create", "Articles/{Slug?}/Create");
+                    options.Conventions.AddPageRoute("/Articles/History", "Articles/{Slug?}/History");
                 });
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            // services.AddTransient<EmailNotifier>();  //To activate email notification
-            services.AddSingleton<IEmailSender, EmailNotifier>();
 
             services.AddProgressiveWebApp();
+
+
 
         }
 
@@ -95,8 +120,8 @@ namespace OdinCM
 
             var initializer = new ArticleNotFoundInitializer();
 
-            var configuration = app.ApplicationServices.GetService<TelemetryConfiguration>();
-            configuration.TelemetryInitializers.Add(initializer);
+           // var configuration = app.ApplicationServices.GetService<TelemetryConfiguration>();
+           // configuration.TelemetryInitializers.Add(initializer);
 
 
             if (env.IsDevelopment())
@@ -109,8 +134,33 @@ namespace OdinCM
             else
             {
                 app.UseExceptionHandler("/Error");
-                app.UseHsts();
+                // app.UseHsts();
             }
+
+            app.UseHsts(options => options.MaxAge(days: 365).IncludeSubdomains());
+            app.UseXContentTypeOptions();
+            app.UseReferrerPolicy(options => options.NoReferrer());
+            app.UseXXssProtection(options => options.EnabledWithBlockMode());
+            app.UseXfo(options => options.Deny());
+
+
+            var supportedCultures = new[]
+            {
+                new CultureInfo("en"),
+                new CultureInfo("sv"),
+                new CultureInfo("es")
+            };
+
+
+            // var locOptions = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture("en"),
+                // Formatting numbers, dates, etc
+                SupportedCultures = supportedCultures,
+                // UI strings that we have localized
+                SupportedUICultures = supportedCultures
+            });
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
@@ -127,6 +177,7 @@ namespace OdinCM
                 Url = settings.Value.Url
             });
 
+
             var scope = app.ApplicationServices.CreateScope();
             var context = scope.ServiceProvider.GetService<OdinCMContext>();
             var identityContext = scope.ServiceProvider.GetService<CoreOdinIdentityContext>();
@@ -135,7 +186,7 @@ namespace OdinCM
 
             app.UseMvc();
 
-            SeedData.Initialize(context);
+            OdinCMContext.SeedData(context);
             CoreOdinIdentityContext.SeedData(identityContext);
         }
     }

@@ -25,7 +25,10 @@ namespace OdinCM
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-            .UseKestrel()
+            .UseKestrel(options =>
+            {
+                options.AddServerHeader = false;
+            })
             .UseIISIntegration()
             .UseApplicationInsights()
             .UseStartup<Startup>();

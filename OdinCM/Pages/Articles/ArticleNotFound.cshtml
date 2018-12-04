@@ -3,7 +3,17 @@
     ViewData["Title"] = title;
 }
 <h1>@title</h1>
-<p>Please check that the URL you entered is correct. It's also possible that an article at this address was deleted.</p>
-<a href="~/">Go to Homepage</a>
+
+<ul>
+    <li>@Localizer["ListItem1"]</li>
+    <li>@Localizer["ListItem2"]</li>
+    <li>@Localizer["ListItem3"] <a asp-page="/Create">create</a> the page?</li>
+</ul>
+
+<div>
+    <a class="btn btn-outline-info" asp-page="/Articles/Create">@Localizer["Create"]</a>
+</div>
+
+<a href="~/">@Localizer["GoHome"]</a>
 
 

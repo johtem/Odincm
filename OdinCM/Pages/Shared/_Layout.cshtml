@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 @using System.IO
+
 @inject Microsoft.AspNetCore.Hosting.IHostingEnvironment env
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor context
 <html>
@@ -47,7 +48,7 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background-color: #64379B; ">
-        <a class="navbar-brand" asp-page="/Index">Odin CM</a>
+        <a href="~/" class="navbar-brand"><img src="/images/icons/icon-32x32white.png" /> </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -71,6 +72,7 @@
                         Suggestions
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownSuggestions">
+                        <a class="dropdown-item" href="/Articles/Create">@Localizer["menu_NewArticle"]</a>
                         <a class="dropdown-item" href="/Articles">Suggestions</a>
                         <a class="dropdown-item" href="/Articles/All">All</a>
                         <a class="dropdown-item" href="/Articles/Search">Search</a>
@@ -78,32 +80,33 @@
 
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/About">About</a>
+                    <a class="nav-link" href="/About">@Localizer["About"]</a>
 
                 </li>
                 <partial name="_LoginPartial" />
             </ul>
-            
+
         </div>
     </nav>
 
     <partial name="_CookieConsentPartial" />
 
-    <div class="container-fluid body-content mt-3">
+    <div class="container body-content mt-3">
         @RenderBody()
-    </div>
 
-    <footer>
-        
+
+        <footer>
+
             <div class="row justify-content-between">
                 <div class="col-sm-12 col-md-8">
-                    &copy; @DateTime.UtcNow.Year - OdinCM: Odin Customer Management
+                    &copy; @DateTime.UtcNow.Year - @Localizer["CopyrightText"]
                 </div>
                 <div class="col-sm-12 col-md-auto">
                     <partial name="_ThemePartial" />
                 </div>
             </div>
-</footer>
+        </footer>
+    </div>
 
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>

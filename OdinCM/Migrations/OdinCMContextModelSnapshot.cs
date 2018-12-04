@@ -23,6 +23,9 @@ namespace OdinCM.Migrations
 
                     b.Property<Guid>("AuthorId");
 
+                    b.Property<string>("AuthorName")
+                        .IsRequired();
+
                     b.Property<string>("Content");
 
                     b.Property<DateTime>("PublishedDateTime")
@@ -34,6 +37,8 @@ namespace OdinCM.Migrations
                         .IsRequired()
                         .HasMaxLength(100);
 
+                    b.Property<int>("Version");
+
                     b.Property<int>("ViewCount");
 
                     b.HasKey("Id");
@@ -44,7 +49,42 @@ namespace OdinCM.Migrations
                     b.ToTable("Articles");
 
                     b.HasData(
-                        new { Id = 1, AuthorId = new Guid("bddf1170-7034-49fa-90d0-3030f45cdfbf"), Content = "This is the default home page. Please change me!", PublishedDateTime = new DateTime(2018, 11, 21, 8, 31, 14, 367, DateTimeKind.Utc), Slug = "home-page", Topic = "HomePage", ViewCount = 0 }
+                        new { Id = 1, AuthorId = new Guid("43c5ac64-0d71-4880-9d38-feefbf2fa277"), AuthorName = "Unknown", Content = "This is the default home page.  Please change me!", PublishedDateTime = new DateTime(2018, 12, 3, 14, 41, 51, 354, DateTimeKind.Utc), Slug = "home-page", Topic = "HomePage", Version = 1, ViewCount = 0 }
+                    );
+                });
+
+            modelBuilder.Entity("OdinCM.Models.ArticleHistory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("ArticleId");
+
+                    b.Property<Guid>("AuthorId");
+
+                    b.Property<string>("AuthorName");
+
+                    b.Property<string>("Content");
+
+                    b.Property<DateTime>("PublishedDateTime")
+                        .HasColumnName("Published");
+
+                    b.Property<string>("Slug");
+
+                    b.Property<string>("Topic")
+                        .IsRequired()
+                        .HasMaxLength(100);
+
+                    b.Property<int>("Version");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ArticleId");
+
+                    b.ToTable("ArticleHistories");
+
+                    b.HasData(
+                        new { Id = 1, ArticleId = 1, AuthorId = new Guid("43c5ac64-0d71-4880-9d38-feefbf2fa277"), AuthorName = "Unknown", Content = "This is the default home page.  Please change me!", PublishedDateTime = new DateTime(2018, 12, 3, 14, 41, 51, 354, DateTimeKind.Utc), Slug = "home-page", Topic = "HomePage", Version = 1 }
                     );
                 });
 
@@ -100,16 +140,53 @@ namespace OdinCM.Migrations
                     b.ToTable("Customer");
 
                     b.HasData(
-                        new { CustomerID = 1, CreatedAtDateTime = new DateTime(2018, 11, 21, 8, 31, 14, 368, DateTimeKind.Utc), CustomerName = "Skf", UpdatedAtDateTime = new DateTime(2018, 11, 21, 8, 31, 14, 368, DateTimeKind.Utc) },
-                        new { CustomerID = 2, CreatedAtDateTime = new DateTime(2018, 11, 21, 8, 31, 14, 368, DateTimeKind.Utc), CustomerName = "ABB", UpdatedAtDateTime = new DateTime(2018, 11, 21, 8, 31, 14, 368, DateTimeKind.Utc) },
-                        new { CustomerID = 3, CreatedAtDateTime = new DateTime(2018, 11, 21, 8, 31, 14, 368, DateTimeKind.Utc), CustomerName = "Yara", UpdatedAtDateTime = new DateTime(2018, 11, 21, 8, 31, 14, 368, DateTimeKind.Utc) }
+                        new { CustomerID = 1, CreatedAtDateTime = new DateTime(2018, 12, 3, 14, 41, 51, 366, DateTimeKind.Utc), CustomerName = "Skf", UpdatedAtDateTime = new DateTime(2018, 12, 3, 14, 41, 51, 366, DateTimeKind.Utc) },
+                        new { CustomerID = 2, CreatedAtDateTime = new DateTime(2018, 12, 3, 14, 41, 51, 366, DateTimeKind.Utc), CustomerName = "ABB", UpdatedAtDateTime = new DateTime(2018, 12, 3, 14, 41, 51, 366, DateTimeKind.Utc) },
+                        new { CustomerID = 3, CreatedAtDateTime = new DateTime(2018, 12, 3, 14, 41, 51, 366, DateTimeKind.Utc), CustomerName = "Yara", UpdatedAtDateTime = new DateTime(2018, 12, 3, 14, 41, 51, 366, DateTimeKind.Utc) },
+                        new { CustomerID = 4, CreatedAtDateTime = new DateTime(2018, 12, 3, 14, 41, 51, 366, DateTimeKind.Utc), CustomerName = "Ericsson", UpdatedAtDateTime = new DateTime(2018, 12, 3, 14, 41, 51, 366, DateTimeKind.Utc) }
                     );
+                });
+
+            modelBuilder.Entity("OdinCM.Models.SlugHistory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("AddedDateTime")
+                        .HasColumnName("Added");
+
+                    b.Property<int?>("ArticleId");
+
+                    b.Property<string>("OldSlug");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ArticleId");
+
+                    b.HasIndex("OldSlug", "AddedDateTime");
+
+                    b.ToTable("SlugHistories");
+                });
+
+            modelBuilder.Entity("OdinCM.Models.ArticleHistory", b =>
+                {
+                    b.HasOne("OdinCM.Models.Article", "Article")
+                        .WithMany("History")
+                        .HasForeignKey("ArticleId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("OdinCM.Models.Comment", b =>
                 {
                     b.HasOne("OdinCM.Models.Article", "Article")
                         .WithMany("Comments")
+                        .HasForeignKey("ArticleId");
+                });
+
+            modelBuilder.Entity("OdinCM.Models.SlugHistory", b =>
+                {
+                    b.HasOne("OdinCM.Models.Article", "Article")
+                        .WithMany()
                         .HasForeignKey("ArticleId");
                 });
 #pragma warning restore 612, 618

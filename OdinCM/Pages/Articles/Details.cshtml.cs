@@ -26,21 +26,26 @@ namespace OdinCM.Pages.Articles
         private readonly OdinCM.Models.OdinCMContext _context;
         private readonly IClock _clock;
         private readonly UserManager<CoreOdinUser> _userManager;
+        private readonly INotificationService _notificationService;
 
         public IConfiguration Configuration { get; }
         public IEmailSender Notifier { get; }
 
-        public DetailsModel(OdinCM.Models.OdinCMContext context, IClock clock, UserManager<CoreOdinUser> userManager,
-            IConfiguration config, IEmailSender notifier)
+
+        public DetailsModel(OdinCM.Models.OdinCMContext context, UserManager<CoreOdinUser> userManager,
+            IConfiguration config, IClock clock, INotificationService notificationService)
         {
             _context = context;
             _clock = clock;
-            _userManager = userManager;
+            _userManager = userManager;            
+            _notificationService = notificationService;
             this.Configuration = config;
-            this.Notifier = notifier;
         }
 
         public Article Article { get; set; }
+
+        [ViewDataAttribute]
+        public string Slug { get; set; }
 
         public async Task<IActionResult> OnGetAsync(string slug)
         {
@@ -52,7 +57,20 @@ namespace OdinCM.Pages.Articles
 
             if (Article == null)
             {
-                return new ArticleNotFoundResult(slug);
+                Slug = slug;
+                var historical = await _context.SlugHistories.Include(h => h.Article)
+                    .OrderByDescending(h => h.Added)
+                    .FirstOrDefaultAsync(h => h.OldSlug == slug.ToLowerInvariant());
+
+                if (historical != null)
+                {
+                    return new RedirectResult($"~/{historical.Article.Slug}");
+                }
+                else
+                {
+                    return new ArticleNotFoundResult(slug);
+                }
+
             }
 
             if (Request.Cookies[Article.Topic] == null)
@@ -86,18 +104,11 @@ namespace OdinCM.Pages.Articles
             comment.Submitted = _clock.GetCurrentInstant();
 
             _context.Comments.Add(comment);
+            var author = await _userManager.FindByIdAsync(this.Article.AuthorId.ToString());
             await _context.SaveChangesAsync();
+            await _notificationService.NotifyAuthorNewComment(author, Article, comment);
 
-            // TODO: Add email notification here
-
-            var authorEmail = (await _userManager.FindByIdAsync(Article.AuthorId.ToString())).Email;
-
-            var thisUrl = Request.GetEncodedUrl();
-
-            await Notifier.SendEmailAsync(authorEmail, "You have a new comment!", $"Someone said something about your article at {thisUrl}");
-
-           
-
+            
             return Redirect($"/Articles/{Article.Slug}");
         }
     }

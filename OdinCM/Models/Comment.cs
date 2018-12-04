@@ -24,6 +24,7 @@ namespace OdinCM.Models
         [Display(Name = "Name")]
         public string DisplayName { get; set; }
 
+        [Display(Name ="Email")]
         [Required, MaxLength(100), DataType(DataType.EmailAddress), EmailAddress(ErrorMessage = "Not a valid Email address")]
         public string Email { get; set; }
 
@@ -45,6 +46,7 @@ namespace OdinCM.Models
         }
 
         [Required]
+        [Display(Name = "Content")]
         [DataType(DataType.MultilineText)]
         public string Content { get; set; }
 
