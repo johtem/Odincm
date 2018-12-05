@@ -6,16 +6,17 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using OdinCM.Models;
+using OdinCM.Data.Models;
+using OdinCM.Data;
 
 namespace OdinCM.Pages.Articles
 {
     [Authorize("CanDeleteArticles")]
     public class DeleteModel : PageModel
     {
-        private readonly OdinCM.Models.OdinCMContext _context;
+        private readonly OdinCMContext _context;
 
-        public DeleteModel(OdinCM.Models.OdinCMContext context)
+        public DeleteModel(OdinCMContext context)
         {
             _context = context;
         }
@@ -30,7 +31,7 @@ namespace OdinCM.Pages.Articles
                 return NotFound();
             }
 
-            Article = await _context.Articles.FirstOrDefaultAsync(m => m.Slug == slug);
+            Article = await _context.Articles.SingleOrDefaultAsync(m => m.Slug == slug);
 
             if (Article == null)
             {

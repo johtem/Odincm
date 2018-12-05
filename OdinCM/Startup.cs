@@ -3,8 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using OdinCM.Configuration;
 using OdinCM.Models;
 using OdinCM.Data;
+using OdinCM.Data.Data.Interfaces;
+using OdinCM.Data.Data.Repositories;
+using OdinCM.Helpers;
+using OdinCM.SearchEngines;
+using OdinCM.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -18,12 +24,8 @@ using Snickler.RSSCore.Providers;
 using Snickler.RSSCore.Extensions;
 using Snickler.RSSCore.Models;
 using Microsoft.AspNetCore.Http;
-using OdinCM.SearchEngines;
-using OdinCM.Configuration;
 using Microsoft.Extensions.Options;
-using OdinCM.Helpers;
 using Microsoft.ApplicationInsights.Extensibility;
-using OdinCM.Services;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Localization;
 using System.Globalization;
@@ -59,10 +61,17 @@ namespace OdinCM
             });
 
             services.AddEntityFrameworkSqlite()
-                    .AddDbContext<OdinCMContext>(options =>
+                    .AddDbContext<IOdinCMContext, OdinCMContext>(options =>
                             options.UseSqlite(Configuration.GetConnectionString("OdinData"))
                             .EnableSensitiveDataLogging(true)  
                     );
+
+            // DB Repos
+            services.AddTransient<IArticleRepository, ArticleSqliteRepository>();
+            services.AddTransient<ICommentRepository, CommentSqliteRepository>();
+            services.AddTransient<ISlugHistoryRepository, SlugHistorySqliteRepository>();
+            services.AddTransient<ICustomerRepository, CustomerSqliteRepository>();
+
 
             //services.AddDbContext<OdinCMContext>(options =>
             //        options.UseSqlServer(Configuration.GetConnectionString("OdinCMContext")));
@@ -90,6 +99,7 @@ namespace OdinCM
             {
                 options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
             })
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 // Add support for finding localized views, based on file name suffix, e.g. Index.fr.cshtml
                 .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
                 // Add support for localizing strings in data annotations (e.g. validation messages) via the
@@ -179,14 +189,14 @@ namespace OdinCM
 
 
             var scope = app.ApplicationServices.CreateScope();
-            var context = scope.ServiceProvider.GetService<OdinCMContext>();
+            var context = scope.ServiceProvider.GetService<IOdinCMContext>();
             var identityContext = scope.ServiceProvider.GetService<CoreOdinIdentityContext>();
 
             app.UseStatusCodePagesWithReExecute("/HttpErrors/{0}");
 
             app.UseMvc();
 
-            OdinCMContext.SeedData(context);
+         //   OdinCMContext.SeedData((OdinCMContext)context);
             CoreOdinIdentityContext.SeedData(identityContext);
         }
     }

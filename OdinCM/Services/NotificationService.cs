@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using OdinCM.Areas.Identity.Data;
 using OdinCM.Configuration;
-using OdinCM.Models;
+using OdinCM.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,7 +37,7 @@ namespace OdinCM.Services
             var model = new
             {
                 AuthorName = author.UserName,
-                Title = "CoreWiki Notification",
+                Title = "Odin Notification",
                 CommentDisplayName = comment.DisplayName,
                 ArticleTitle = article.Topic,
                 ArticleUrl = GetUrlForArticle(article)

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using OdinCM.Models;
+using OdinCM.Data.Models;
 using OdinCM.SearchEngines;
 
 namespace OdinCM.Pages.Articles

@@ -5,17 +5,20 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using OdinCM.Models;
+using OdinCM.Data;
+using OdinCM.Data.Data.Interfaces;
+using OdinCM.Data.Models;
+
 
 namespace OdinCM.Pages.Customers
 {
     public class DetailsModel : PageModel
     {
-        private readonly OdinCM.Models.OdinCMContext _context;
+        private readonly ICustomerRepository _customerRepo;
 
-        public DetailsModel(OdinCM.Models.OdinCMContext context)
+        public DetailsModel(ICustomerRepository customerRepo)
         {
-            _context = context;
+            _customerRepo = customerRepo;
         }
 
         public Customer Customer { get; set; }
@@ -27,7 +30,7 @@ namespace OdinCM.Pages.Customers
                 return NotFound();
             }
 
-            Customer = await _context.Customer.FirstOrDefaultAsync(m => m.CustomerID == id);
+            Customer = await _customerRepo.GetCustomerById(id);
 
             if (Customer == null)
             {

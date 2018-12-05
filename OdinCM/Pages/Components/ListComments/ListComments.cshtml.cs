@@ -4,18 +4,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using OdinCM.Models;
+using OdinCM.Data.Models;
 
 namespace OdinCM.Pages.Components.ListComments
 {
     [ViewComponent(Name = "ListComments")]
     public class ListComments : ViewComponent
     {
-        private readonly OdinCMContext _context;
 
-        public ListComments(OdinCMContext context)
+        public ListComments()
         {
-            this._context = context;
+
         }
 
         public IViewComponentResult Invoke(ICollection<Comment> comments)

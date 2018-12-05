@@ -8,7 +8,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
 using OdinCM.Helpers;
-using OdinCM.Models;
+using OdinCM.Data.Models;
+using OdinCM.Data.Data.Interfaces;
 
 namespace OdinCM.Pages.Articles
 {
@@ -20,12 +21,12 @@ namespace OdinCM.Pages.Articles
         [BindProperty]
         public List<string> LinksToCreate { get; set; } = new List<string>();
 
-        private readonly OdinCMContext _context;
+        private readonly IArticleRepository _articleRepo;
         private readonly IClock _clock;
 
-        public CreateArticleFromLinkModel(OdinCMContext context, IClock clock)
+        public CreateArticleFromLinkModel(IArticleRepository articleRepo, IClock clock)
         {
-            _context = context;
+            _articleRepo = articleRepo;
             _clock = clock;
         }
 
@@ -36,14 +37,14 @@ namespace OdinCM.Pages.Articles
                 return NotFound();
             }
 
-            Article = await _context.Articles.SingleOrDefaultAsync(m => m.Slug == id);
+            Article = await _articleRepo.GetArticleBySlug(id);
 
             if (Article == null)
             {
                 return new ArticleNotFoundResult();
             }
 
-            LinksToCreate = ArticleHelpers.GetArticlesToCreate(_context, Article).ToList();
+            LinksToCreate = (await ArticleHelpers.GetArticlesToCreate(_articleRepo, Article)).ToList();
 
             if (LinksToCreate.Count == 0)
             {
@@ -66,8 +67,7 @@ namespace OdinCM.Pages.Articles
                     Content = string.Empty
                 };
 
-                _context.Articles.Add(newArticle);
-                await _context.SaveChangesAsync();
+                newArticle = await _articleRepo.CreateArticleAndHistory(newArticle);
             }
 
             return Redirect($"/Articles/{(slug == "home-page" ? "" : slug)}");

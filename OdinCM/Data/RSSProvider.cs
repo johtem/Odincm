@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using OdinCM.Configuration;
-using OdinCM.Models;
+using OdinCM.Data.Models;
 using Snickler.RSSCore.Models;
 using Snickler.RSSCore.Providers;
 using System;

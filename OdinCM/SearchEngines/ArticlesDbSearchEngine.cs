@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OdinCM.Models;
+using OdinCM.Data;
+using OdinCM.Data.Data.Interfaces;
+using OdinCM.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,11 +11,11 @@ namespace OdinCM.SearchEngines
 {
     public class ArticlesDbSearchEngine : IArticlesSearchEngine
     {
-        private readonly OdinCMContext _context;
+        private readonly IArticleRepository _articleRepo;
 
-        public ArticlesDbSearchEngine(OdinCMContext context)
+        public ArticlesDbSearchEngine(IArticleRepository articleRepo)
         {
-            _context = context;
+            _articleRepo = articleRepo;
         }
 
         public async Task<SearchResult<Article>> SearchAsync(string query, int pageNumber, int resultsPerPage)
@@ -21,13 +23,7 @@ namespace OdinCM.SearchEngines
             var filteredQuery = query.Trim();
             var offset = (pageNumber - 1) * resultsPerPage;
 
-            var dbQuery = _context
-                .Articles
-                .AsNoTracking()
-                .Where(article =>
-                    article.Topic.ToUpper().Contains(filteredQuery.ToUpper()) ||
-                    article.Content.ToUpper().Contains(filteredQuery.ToUpper())
-                );
+            var dbQuery = _articleRepo.GetArticlesForSearchQuery(filteredQuery);
 
             var totalResults = await dbQuery.CountAsync();
 

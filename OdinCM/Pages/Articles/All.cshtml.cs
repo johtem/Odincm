@@ -5,19 +5,20 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using OdinCM.Models;
+using OdinCM.Data;
+using OdinCM.Data.Data.Interfaces;
+using OdinCM.Data.Models;
 
 namespace OdinCM.Pages.Articles
 {
     public class AllModel : PageModel
     {
-        private readonly OdinCMContext _Context;
+        private readonly IArticleRepository  _articleRepo;
         
 
-        public AllModel(OdinCMContext Context)
+        public AllModel(IArticleRepository articleRepo)
         {
-            _Context = Context;
+            _articleRepo = articleRepo;
         }
 
         [FromRoute]
@@ -37,23 +38,19 @@ namespace OdinCM.Pages.Articles
         public async Task OnGet(int pageNumber = 1)
         {
             ManagePageSize();
-            await FetchArticles();
-
-            
-
-            
-
+            Articles = await _articleRepo.GetAllArticlesPaged(PageSize, pageNumber);
+            TotalPages = await _articleRepo.GetTotalPagesOfArticles(PageSize);
         }
 
         private void ManagePageSize()
         {
-            if (int.TryParse(Request.Cookies["PageSize"], out int pageSize)  == false)
+            if (int.TryParse(Request.Cookies["PageSize"], out var pageSize)  == false)
             {
                 pageSize = 20;
                 Response.Cookies.Append("PageSize", pageSize.ToString());
             }
 
-            List<int> selectPageSizes = new List<int> { 2, 5, 10, 20, 40 };
+            var selectPageSizes = new List<int> { 2, 5, 10, 20, 40 };
             if (selectPageSizes.Contains(pageSize) == false)
             {
                 selectPageSizes.Insert(0, pageSize);
@@ -61,19 +58,6 @@ namespace OdinCM.Pages.Articles
             PageSizeOptions = new SelectList(selectPageSizes);
             PageSize = pageSize;
         }
-
-        private async Task FetchArticles()
-        {
-            Articles = await _Context.Articles
-                .AsNoTracking()
-                .OrderBy(a => a.Topic)
-                .Skip((PageNumber - 1) * PageSize)
-                .Take(PageSize)
-                .ToArrayAsync();
-
-            TotalPages = (int)Math.Ceiling((await _Context.Articles.CountAsync()) / (double)PageSize);
-        }
-
 
     }
 }

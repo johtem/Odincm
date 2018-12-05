@@ -1,19 +1,17 @@
-﻿@model Articles.DetailsModel
-@using Microsoft.Extensions.Options;
-@using OdinCM.Configuration;
-@inject IOptionsSnapshot<AppSettings> settings
+﻿@using Data.Models
+@using OdinCM.Configuration
+@model OdinCM.Pages.Articles.DetailsModel
+@inject Microsoft.Extensions.Options.IOptionsSnapshot<AppSettings> settings
 
-@if (User.Identity.IsAuthenticated)
-{
-
-
-    @if (settings.Value.Comments.IsEngineLocal)
+    @if (User.Identity.IsAuthenticated)
     {
-        @await Component.InvokeAsync("CreateComments", new Models.Comment { IdArticle = Model.Article.Id })
-        @await Component.InvokeAsync("ListComments", @Model.Article.Comments)
+        @if (settings.Value.Comments.IsEngineLocal)
+        {
+            @await Component.InvokeAsync("CreateComments", new Comment { IdArticle = Model.Article.Id })
+            @await Component.InvokeAsync("ListComments", @Model.Article.Comments)
+        }
+        else
+        {
+            <partial name="_DisqusComments" model="settings.Value.Comments.Disqus.ShortName" />
+        }
     }
-    else
-    {
-        <partial name="_DisqusComments" model="settings.Value.Comments.Disqus.ShortName" />
-    }
-}

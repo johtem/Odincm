@@ -1,5 +1,7 @@
 ﻿@page
 @model OdinCM.Pages.Customers.IndexModel
+@using Microsoft.AspNetCore.Mvc.Rendering
+
 
 @{
     ViewData["Title"] = "Customers";
@@ -25,13 +27,13 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Customers[0].CustomerName)
+                Customer Name
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Customers[0].CreatedAt)
+                CreatedAt
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Customers[0].UpdatedAt)
+                UpdatedAt
             </th>
             <th></th>
         </tr>

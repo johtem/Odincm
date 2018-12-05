@@ -1,4 +1,5 @@
 ﻿using OdinCM.Areas.Identity.Data;
+using OdinCM.Data.Models;
 using OdinCM.Models;
 using System;
 using System.Collections.Generic;

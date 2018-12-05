@@ -6,24 +6,24 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using NodaTime;
-using OdinCM.Models;
+using OdinCM.Data.Models;
 using OdinCM.Helpers;
 using Microsoft.Extensions.Logging;
-using OdinCM.Areas.Identity.Data;
 using System.Security.Claims;
-using Microsoft.EntityFrameworkCore;
+using OdinCM.Data;
+using OdinCM.Data.Data.Interfaces;
 
 namespace OdinCM.Pages.Articles
 {
     public class CreateModel : PageModel
     {
-        private readonly OdinCMContext _context;
+        private readonly IArticleRepository _articleRepo;
         private readonly IClock _clock;
         public ILogger Logger { get; private set; }
 
-        public CreateModel(OdinCMContext context, IClock clock, ILoggerFactory loggerFactory)
+        public CreateModel(IArticleRepository articleRepo, IClock clock, ILoggerFactory loggerFactory)
         {
-            _context = context;
+            _articleRepo = articleRepo;
             _clock = clock;
             this.Logger = loggerFactory.CreateLogger("CreatePage");
         }
@@ -35,9 +35,7 @@ namespace OdinCM.Pages.Articles
                 return Page();
             }
 
-            Article article = await _context.Articles.SingleOrDefaultAsync(m => m.Slug == slug);
-
-            if (article != null)
+            if (await _articleRepo.GetArticleBySlug(slug) != null)
             {
                 return Redirect($"/Articles/{slug}/Edit");
             }
@@ -59,7 +57,7 @@ namespace OdinCM.Pages.Articles
         public async Task<IActionResult> OnPostAsync()
         {
             var slug = UrlHelpers.URLFriendly(Article.Topic);
-            if (String.IsNullOrWhiteSpace(slug))
+            if (string.IsNullOrWhiteSpace(slug))
             {
                 ModelState.AddModelError("Article.Topic", "The Topic must contain at least one alphanumeric character.");
                 return Page();
@@ -75,21 +73,19 @@ namespace OdinCM.Pages.Articles
   
             // Check if slug already exist in database
             Logger.LogWarning($"Creating page with slug: {slug}");
-            var isAvailable = !_context.Articles.Any(x => x.Slug == slug);
+            
 
-            if (isAvailable == false)
+            if (await _articleRepo.IsTopicAvailable(slug, 0))
             {
                 ModelState.AddModelError("Article.Topic", "This Title already exists.");
                 return Page();
             }
 
             Article.Published = _clock.GetCurrentInstant();
-            
-            _context.Articles.Add(Article);
-            _context.ArticleHistories.Add(ArticleHistory.FromArticle(Article));
-            await _context.SaveChangesAsync();
 
-            var articlesToCreateFromLinks = ArticleHelpers.GetArticlesToCreate(_context, Article, createSlug: true)
+            Article = await _articleRepo.CreateArticleAndHistory(Article);
+
+            var articlesToCreateFromLinks = (await ArticleHelpers.GetArticlesToCreate(_articleRepo, Article, createSlug: true))
                 .ToList();
 
             if (articlesToCreateFromLinks.Count > 0)

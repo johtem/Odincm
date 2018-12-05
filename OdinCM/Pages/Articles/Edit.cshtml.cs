@@ -8,19 +8,23 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
+using OdinCM.Data;
+using OdinCM.Data.Data.Interfaces;
 using OdinCM.Helpers;
-using OdinCM.Models;
+using OdinCM.Data.Models;
 
 namespace OdinCM.Pages.Articles
 {
     public class EditModel : PageModel
     {
         private readonly OdinCMContext _context;
+        private readonly IArticleRepository _articleRepo;
         private readonly IClock _clock;
 
-        public EditModel(OdinCMContext context, IClock clock)
+        public EditModel(IOdinCMContext context, IArticleRepository articleRepo, IClock clock)
         {
-            _context = context;
+            _context = (OdinCMContext)context;
+            _articleRepo = articleRepo;
             _clock = clock;
         }
 
@@ -34,7 +38,7 @@ namespace OdinCM.Pages.Articles
                 return NotFound();
             }
 
-            Article = await _context.Articles.SingleOrDefaultAsync(m => m.Slug == slug);
+            Article = await _articleRepo.GetArticleBySlug(slug);
 
             if (Article == null)
             {
@@ -50,7 +54,8 @@ namespace OdinCM.Pages.Articles
                 return Page();
             }
 
-            var existingArticle = _context.Articles.AsNoTracking().First(a => a.Id == Article.Id);
+            var existingArticle = await _articleRepo.GetArticleById(Article.Id);
+
             Article.ViewCount = existingArticle.ViewCount;
             Article.Version = existingArticle.Version + 1;
 
@@ -62,18 +67,18 @@ namespace OdinCM.Pages.Articles
                 return Page();
             }
 
-            var isAvailable = !_context.Articles.Any(x => x.Slug == slug && x.Id != Article.Id);
+            
 
-            if (isAvailable == false)
+            if (await _articleRepo.IsTopicAvailable(slug, Article.Id))
             {
                 ModelState.AddModelError("Article.Topic", "This Title already exists.");
                 return Page();
             }
 
             // Verify if there are links to new articles
-            var articlesToCreateFromLinks = ArticleHelpers.GetArticlesToCreate(_context, Article, createSlug: true).ToList();
+            var articlesToCreateFromLinks = (await ArticleHelpers.GetArticlesToCreate(_articleRepo, Article, createSlug: true)).ToList();
 
-            // Force an update on the existing Article
+            // Force an update on the existing Article object
             _context.Attach(Article).State = EntityState.Modified;
 
             Article.Published = _clock.GetCurrentInstant();

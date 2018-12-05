@@ -1,4 +1,5 @@
-﻿using OdinCM.Models;
+﻿using OdinCM.Data.Data.Interfaces;
+using OdinCM.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace OdinCM.Helpers
         private static readonly string articleLinksPattern = @"(\[[\w\s.\-_:;\!\?]*[\]][\(])((?!(http|https))[\w\s\-_]*)([\)])";
         private static readonly string LinkPrefix = "](";
 
-        public static IList<string> GetArticlesToCreate(OdinCMContext context, Article article, bool createSlug = false)
+        public static async Task<IList<string>> GetArticlesToCreate(IArticleRepository articleRepo, Article article, bool createSlug = false)
         {
             var articlesToCreate = new List<string>();
 
@@ -26,7 +27,7 @@ namespace OdinCM.Helpers
                     var slug = createSlug ? UrlHelpers.URLFriendly(link) : link;
 
                     // Does the slug already exist in the database?
-                    if (!context.Articles.Any(x => x.Slug.Equals(slug) && x.Id != article.Id))
+                    if (!await articleRepo.IsTopicAvailable(slug, article.Id))
                     {
                         if (createSlug && !slug.Equals(link))
                         {

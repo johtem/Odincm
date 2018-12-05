@@ -8,17 +8,19 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using OdinCM.Helpers;
-using OdinCM.Models;
+using OdinCM.Data.Models;
+using OdinCM.Data;
+using OdinCM.Data.Data.Interfaces;
 
 namespace OdinCM.Pages.Articles
 {
     public class HistoryModel : PageModel
     {
-        private readonly OdinCM.Models.OdinCMContext _context;
+        private readonly IArticleRepository _articleRepo;
 
-        public HistoryModel(OdinCMContext context)
+        public HistoryModel(IArticleRepository articleRepo)
         {
-            _context = context;
+            _articleRepo = articleRepo;
         }
 
         
@@ -36,9 +38,7 @@ namespace OdinCM.Pages.Articles
                 return NotFound();
             }
 
-            Article = await _context.Articles
-                .Include(a => a.History)
-                .SingleOrDefaultAsync(m => m.Slug == slug);
+            Article = await _articleRepo.GetArticleWithHistoriesBySlug(slug);
             
             if (Article == null)
             {
@@ -51,9 +51,7 @@ namespace OdinCM.Pages.Articles
         public async Task<IActionResult> OnPostAsync(string slug)
         {
 
-            Article = await _context.Articles
-                .Include(a => a.History)
-                .SingleOrDefaultAsync(m => m.Slug == slug);
+            Article = await _articleRepo.GetArticleWithHistoriesBySlug(slug);
 
             var histories = Article.History
                 .Where(h => Compare.Any(c => c == h.Version.ToString()))

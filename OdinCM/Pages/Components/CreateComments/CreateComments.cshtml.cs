@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using OdinCM.Models;
+using OdinCM.Data;
+using OdinCM.Data.Models;
 
 namespace OdinCM.Pages.Components.CreateComments
 {
@@ -13,9 +10,9 @@ namespace OdinCM.Pages.Components.CreateComments
     {
         private readonly OdinCMContext _context;
 
-        public CreateComments(OdinCMContext context)
+        public CreateComments(IOdinCMContext context)
         {
-            this._context = context;
+            this._context = (OdinCMContext)context;
         }
 
         public IViewComponentResult Invoke(Comment comment)

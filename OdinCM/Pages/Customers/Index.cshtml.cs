@@ -4,50 +4,62 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using OdinCM.Models;
+using OdinCM.Data;
+using OdinCM.Data.Data.Interfaces;
+using OdinCM.Data.Models;
+
 
 namespace OdinCM.Pages.Customers
 {
     public class IndexModel : PageModel
     {
-        private readonly OdinCM.Models.OdinCMContext _context;
-        private const int _PageSize = 10;
+        private readonly ICustomerRepository _customerRepo;
 
-        public IndexModel(OdinCM.Models.OdinCMContext context)
+        public IndexModel(ICustomerRepository customerRepo)
         {
-            _context = context;
+            _customerRepo = customerRepo;
         }
 
-        [FromQuery()]
+        [FromRoute]
         public int PageNumber { get; set; } = 1;
+
+        [BindProperty]
+        public int PageSize { get; set; } = 3;
+
+        public SelectList PageSizeOptions { get; set; }
 
         public int TotalPages { get; set; }
 
-        public List<Customer> Customers { get; set; }
+        public IEnumerable<Customer> Customers { get; set; }
 
-        
-        public async Task OnGetAsync(string searchString)
+       
+
+        public async Task OnGet(int pageNumber = 1)
         {
-            ViewData["SearchString"] = searchString;
+            ManagePageSize();
+            Customers = await _customerRepo.GetAllCustomersPaged(PageSize, pageNumber);
+            TotalPages = await _customerRepo.GetTotalPagesOfCustomers(PageSize);
 
-            var customers = from m in _context.Customer
-                         select m;
+        }
 
-            if (!String.IsNullOrEmpty(searchString))
+
+        private void ManagePageSize()
+        {
+            if (int.TryParse(Request.Cookies["PageSize"], out var pageSize) == false)
             {
-                customers = customers.Where(s => s.CustomerName.Contains(searchString));
-                TotalPages = (int)Math.Ceiling((await _context.Customer.Where(s => s.CustomerName.Contains(searchString)).CountAsync()) / (double)_PageSize);
-            } else
-            {
-                TotalPages = (int)Math.Ceiling((await _context.Customer.CountAsync()) / (double)_PageSize);
+                pageSize = 20;
+                Response.Cookies.Append("PageSize", pageSize.ToString());
             }
 
-            Customers = await customers.OrderBy(s => s.CustomerName)
-                .Skip((PageNumber - 1) * _PageSize)
-                .Take(_PageSize)
-                .ToListAsync();
-
+            var selectPageSizes = new List<int> { 2, 5, 10, 20, 40 };
+            if (selectPageSizes.Contains(pageSize) == false)
+            {
+                selectPageSizes.Insert(0, pageSize);
+            }
+            PageSizeOptions = new SelectList(selectPageSizes);
+            PageSize = pageSize;
         }
     }
 }

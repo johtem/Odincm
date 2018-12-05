@@ -5,15 +5,16 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using OdinCM.Models;
+using OdinCM.Data;
+using OdinCM.Data.Models;
 
 namespace OdinCM.Pages.Articles
 {
     public class IndexModel : PageModel
     {
-        private readonly OdinCM.Models.OdinCMContext _context;
+        private readonly OdinCMContext _context;
 
-        public IndexModel(OdinCM.Models.OdinCMContext context)
+        public IndexModel(OdinCMContext context)
         {
             _context = context;
         }

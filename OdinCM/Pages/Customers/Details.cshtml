@@ -5,10 +5,9 @@
     ViewData["Title"] = "Details";
 }
 
-<h2>Details</h2>
 
 <div>
-    <h4>Customer</h4>
+    <h3>@Localizer["Customer"]</h3>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -21,13 +20,13 @@
             @Html.DisplayNameFor(model => model.Customer.CreatedAt)
         </dt>
         <dd>
-            <span data-value="@Html.DisplayFor(model => model.Customer.CreatedAt)" class="timeStampValue"> @Html.DisplayFor(model => model.Customer.CreatedAt)</span>
+            <span data-value="@Model.Customer.CreatedAt" class="timeStampValue"> @Model.Customer.CreatedAt</span>
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Customer.UpdatedAt)
         </dt>
         <dd>
-            <span data-value="@Html.DisplayFor(model => model.Customer.UpdatedAt)" class="timeStampValue"> @Html.DisplayFor(model => model.Customer.UpdatedAt)</span>
+            <span data-value="@Model.Customer.UpdatedAt" class="timeStampValue"> @Model.Customer.UpdatedAt</span>
         </dd>
     </dl>
 </div>

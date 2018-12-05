@@ -7,16 +7,18 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
-using OdinCM.Models;
+using OdinCM.Data;
+using OdinCM.Data.Models;
+
 
 namespace OdinCM.Pages.Customers
 {
     public class EditModel : PageModel
     {
-        private readonly OdinCM.Models.OdinCMContext _context;
+        private readonly OdinCMContext _context;
         private readonly IClock _clock;
 
-        public EditModel(OdinCM.Models.OdinCMContext context, IClock clock)
+        public EditModel(OdinCMContext context, IClock clock)
         {
             _context = context;
             _clock = clock;

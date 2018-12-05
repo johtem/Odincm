@@ -6,17 +6,19 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using NodaTime;
+using OdinCM.Data;
+using OdinCM.Data.Models;
 using OdinCM.Models;
 
 namespace OdinCM.Pages.Customers
 {
     public class CreateModel : PageModel
     {
-        private readonly OdinCM.Models.OdinCMContext _context;
+        private readonly OdinCMContext _context;
         private readonly IClock _clock;
 
 
-        public CreateModel(OdinCM.Models.OdinCMContext context, IClock clock)
+        public CreateModel(OdinCMContext context, IClock clock)
         {
             _context = context;
             _clock = clock;
