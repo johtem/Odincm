@@ -60,17 +60,7 @@ namespace OdinCM
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddEntityFrameworkSqlite()
-                    .AddDbContext<IOdinCMContext, OdinCMContext>(options =>
-                            options.UseSqlite(Configuration.GetConnectionString("OdinData"))
-                            .EnableSensitiveDataLogging(true)  
-                    );
-
-            // DB Repos
-            services.AddTransient<IArticleRepository, ArticleSqliteRepository>();
-            services.AddTransient<ICommentRepository, CommentSqliteRepository>();
-            services.AddTransient<ISlugHistoryRepository, SlugHistorySqliteRepository>();
-            services.AddTransient<ICustomerRepository, CustomerSqliteRepository>();
+            services.AddSqliteRepositories(Configuration);
 
 
             //services.AddDbContext<OdinCMContext>(options =>
@@ -189,14 +179,17 @@ namespace OdinCM
 
 
             var scope = app.ApplicationServices.CreateScope();
-            var context = scope.ServiceProvider.GetService<IOdinCMContext>();
-            var identityContext = scope.ServiceProvider.GetService<CoreOdinIdentityContext>();
+           
+            var identityContext = scope.SeedData()
+                .ServiceProvider
+                .GetService<CoreOdinIdentityContext>();
+            
 
             app.UseStatusCodePagesWithReExecute("/HttpErrors/{0}");
 
             app.UseMvc();
 
-         //   OdinCMContext.SeedData((OdinCMContext)context);
+            
             CoreOdinIdentityContext.SeedData(identityContext);
         }
     }

@@ -11,13 +11,13 @@ namespace OdinCM.Data.Data.Repositories
 {
     public class SlugHistorySqliteRepository : ISlugHistoryRepository
     {
-        public SlugHistorySqliteRepository(IOdinCMContext context)
+        public SlugHistorySqliteRepository(OdinCMContext context)
         {
             Context = context;
         }
 
 
-        public IOdinCMContext Context { get; }
+        public OdinCMContext Context { get; }
 
 
         public async Task<SlugHistory> GetSlugHistoryWithArticle(string slug)
@@ -32,5 +32,21 @@ namespace OdinCM.Data.Data.Repositories
         {
             Context.Dispose();
         }
+
+        public Task AddToHistory(string oldSlug, Article article)
+        {
+
+            var newSlug = new SlugHistory()
+            {
+                OldSlug = oldSlug,
+                Article = article,
+                AddedDateTime = DateTime.UtcNow
+            };
+
+            Context.SlugHistories.Add(newSlug);
+            return Context.SaveChangesAsync();
+
+        }
+
     }
 }

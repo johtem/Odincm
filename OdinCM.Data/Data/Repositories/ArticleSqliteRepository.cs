@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OdinCM.Data.Data.Interfaces;
 using OdinCM.Data.Models;
+using OdinCM.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,13 +12,12 @@ namespace OdinCM.Data.Data.Repositories
 {
     public class ArticleSqliteRepository : IArticleRepository
     {
-        public ArticleSqliteRepository(IOdinCMContext context)
+        public ArticleSqliteRepository(OdinCMContext context)
         {
             Context = context;
         }
 
-        public IOdinCMContext Context { get; }
-
+        public OdinCMContext Context { get; }
 
         public async Task<IEnumerable<Article>> GetAllArticlesPaged(int pageSize, int pageNumber)
         {
@@ -98,5 +98,36 @@ namespace OdinCM.Data.Data.Repositories
         {
             Context.Dispose();
         }
+
+        public Task<bool> Exists(int id)
+        {
+
+            return Context.Articles.AnyAsync(e => e.Id == id);
+
+        }
+
+        public async Task Update(Article article)
+        {
+            Context.Attach(article); //.State = EntityState.Modified;
+            Context.ArticleHistories.Add(ArticleHistory.FromArticle(article));
+
+            try
+            {
+                await Context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!await Exists(article.Id))
+                {
+                    throw new ArticleNotFoundException();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+        }
+
     }
 }

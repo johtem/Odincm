@@ -11,9 +11,9 @@ namespace OdinCM.Data.Data.Repositories
 {
     public class CustomerSqliteRepository : ICustomerRepository
     {
-        public IOdinCMContext Context { get; }
+        public OdinCMContext Context { get; }
 
-        public CustomerSqliteRepository(IOdinCMContext context)
+        public CustomerSqliteRepository(OdinCMContext context)
         {
             Context = context;
         }

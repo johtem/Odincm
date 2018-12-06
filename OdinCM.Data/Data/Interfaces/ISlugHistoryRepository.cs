@@ -9,5 +9,7 @@ namespace OdinCM.Data.Data.Interfaces
     public interface ISlugHistoryRepository : IDisposable
     {
         Task<SlugHistory> GetSlugHistoryWithArticle(string slug);
+
+        Task AddToHistory(string oldSlug, Article article);
     }
 }

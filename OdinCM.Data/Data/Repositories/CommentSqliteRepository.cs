@@ -10,12 +10,12 @@ namespace OdinCM.Data.Data.Repositories
     public class CommentSqliteRepository : ICommentRepository
     {
 
-        public CommentSqliteRepository(IOdinCMContext context)
+        public CommentSqliteRepository(OdinCMContext context)
         {
             Context = context;
         }
 
-        public IOdinCMContext Context { get; }
+        public OdinCMContext Context { get; }
 
 
 

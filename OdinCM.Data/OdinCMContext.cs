@@ -10,9 +10,9 @@ using System.Threading;
 
 namespace OdinCM.Data
 {
-    public class OdinCMContext : DbContext, IOdinCMContext
+    public class OdinCMContext : DbContext
     {
-        public OdinCMContext (DbContextOptions<OdinCMContext> options)
+        public OdinCMContext(DbContextOptions<OdinCMContext> options)
             : base(options)
         {
         }
@@ -89,15 +89,14 @@ namespace OdinCM.Data
         public DbSet<SlugHistory> SlugHistories { get; set; }
         public DbSet<ArticleHistory> ArticleHistories { get; set; }
 
-        public override Task<int> SaveChangesAsync(
-            CancellationToken cancellationToken = default(CancellationToken))
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
             return base.SaveChangesAsync(cancellationToken);
         }
 
-        internal static void SeedData(OdinCMContext context)
+        public static void SeedData(OdinCMContext context)
         {
-            context.Database.Migrate();
+            //context.Database.Migrate();
         }
 
     }

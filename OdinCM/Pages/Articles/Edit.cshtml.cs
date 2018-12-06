@@ -1,30 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using OdinCM.Data;
+using OdinCM.Data.Data.Interfaces;
+using OdinCM.Data.Data.Repositories;
+using OdinCM.Data.Models;
+using OdinCM.Helpers;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
+using NodaTime;
+using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using NodaTime;
-using OdinCM.Data;
-using OdinCM.Data.Data.Interfaces;
-using OdinCM.Helpers;
-using OdinCM.Data.Models;
 
 namespace OdinCM.Pages.Articles
 {
     public class EditModel : PageModel
     {
-        private readonly OdinCMContext _context;
+        
         private readonly IArticleRepository _articleRepo;
+        private readonly ISlugHistoryRepository _slugRepo;
         private readonly IClock _clock;
 
-        public EditModel(IOdinCMContext context, IArticleRepository articleRepo, IClock clock)
+        public EditModel( IArticleRepository articleRepo, ISlugHistoryRepository slugHistoryRepository, IClock clock)
         {
-            _context = (OdinCMContext)context;
             _articleRepo = articleRepo;
+            _slugRepo = slugHistoryRepository;
             _clock = clock;
         }
 
@@ -55,7 +55,6 @@ namespace OdinCM.Pages.Articles
             }
 
             var existingArticle = await _articleRepo.GetArticleById(Article.Id);
-
             Article.ViewCount = existingArticle.ViewCount;
             Article.Version = existingArticle.Version + 1;
 
@@ -67,8 +66,6 @@ namespace OdinCM.Pages.Articles
                 return Page();
             }
 
-            
-
             if (await _articleRepo.IsTopicAvailable(slug, Article.Id))
             {
                 ModelState.AddModelError("Article.Topic", "This Title already exists.");
@@ -78,9 +75,7 @@ namespace OdinCM.Pages.Articles
             // Verify if there are links to new articles
             var articlesToCreateFromLinks = (await ArticleHelpers.GetArticlesToCreate(_articleRepo, Article, createSlug: true)).ToList();
 
-            // Force an update on the existing Article object
-            _context.Attach(Article).State = EntityState.Modified;
-
+            
             Article.Published = _clock.GetCurrentInstant();
             Article.Slug = slug;
             Article.AuthorId = Guid.Parse(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
@@ -88,33 +83,18 @@ namespace OdinCM.Pages.Articles
 
             if (!string.Equals(Article.Slug, existingArticle.Slug, StringComparison.InvariantCulture))
             {
-                var historical = new SlugHistory()
-                {
-                    OldSlug = existingArticle.Slug,
-                    Article = Article,
-                    Added = _clock.GetCurrentInstant()
-                };
-
-                _context.Attach(historical).State = EntityState.Added;
+                await _slugRepo.AddToHistory(existingArticle.Slug, Article);
             }
 
-            AddNewArticleVersion();
+            //AddNewArticleVersion();
 
             try
             {
-                await _context.SaveChangesAsync();
-
+                await _articleRepo.Update(Article);
             }
-            catch (DbUpdateConcurrencyException)
+            catch (ArticleNotFoundException)
             {
-                if (!ArticleExists(Article.Id))
-                {
-                    return new ArticleNotFoundResult();
-                }
-                else
-                {
-                    throw;
-                }
+                return new ArticleNotFoundResult();
             }
 
            
@@ -127,16 +107,7 @@ namespace OdinCM.Pages.Articles
             return Redirect($"/Articles/{(Article.Slug == "home-page" ? "" : Article.Slug)}");
         }
 
-        private void AddNewArticleVersion()
-        {
+       
 
-            _context.ArticleHistories.Add(ArticleHistory.FromArticle(Article));
-
-        }
-
-        private bool ArticleExists(int id)
-        {
-            return _context.Articles.Any(e => e.Id == id);
-        }
     }
 }
